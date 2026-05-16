@@ -48,9 +48,9 @@ pentru demo. Rulează pe http://localhost:5000.
 
 | Sursă | Status |
 |---|---|
-| Open-Meteo Weather (precipitații real) | Disponibile |
-| Open-Meteo Air Quality (PM10, CO, NO2 suprafață real) | Disponibile |
-| EMSC/USGS (catalog seismic real) | Disponibile |
+| Open-Meteo Weather (precipitații real) | Disponibilă |
+| Open-Meteo Air Quality (PM10, CO, NO2 suprafață real) | Disponibilă |
+| EMSC/USGS (catalog seismic real) | Disponibilă |
 | EGMS Sentinel-1 (subsidență InSAR) | Hook gata, necesită download manual |
 | Aer subteran (CO, NO2, PM10, CH4) | Modelat din aer suprafață real + activitate |
 | Convergometre + PGV + LiDAR + infiltrație tuneluri | Sintetic, hook senzori în prod |
