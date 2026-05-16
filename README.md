@@ -1,71 +1,62 @@
-# GeoSentinel — Early Warning Intelligence for Critical Infrastructure
+# GeoSentinel
 
+GeoSentinel is an early-warning intelligence platform designed to monitor, detect, and analyze signals related to critical infrastructure and environmental risk. The system integrates data ingestion pipelines, detection logic, and a web-based visualization layer to support situational awareness and operational decision-making.
 
+## Overview
 
-## Site-uri monitorizate
+GeoSentinel ingests real and synthetic geospatial and environmental data, applies detection logic to identify anomalies or emerging risks, and presents results through an interactive dashboard. The platform is modular and extensible, supporting both automated analysis and analyst-driven operational briefings.
 
-**Mine (7):** Praid (eveniment 2025), Ocna Dej, Cacica, Slănic, Târgu Ocna,
-Lupeni, Livezeni.
+## Project Structure
 
-**Tuneluri autostradă (5):** Margina-Holdea T1+T2 (A1), Curtea de Argeș (A1),
-Poiana (A1, TBM), Meseș (A3, în proiectare).
+- ingestion/ — Data ingestion pipelines and preprocessing  
+- detection/ — Detection and alerting logic  
+- api/ — Backend API and dashboard server  
+- dashboard/ — Web-based visualization components  
+- agent/ — Operational briefing and agent workflows  
+- data/ — Sample or processed datasets  
+- prompts/ — Prompt templates for agent execution  
 
-## Quickstart
+## Requirements
 
-```bash
-# 1. Setup
-python -m venv .venv
-source .venv/bin/activate              # Linux/macOS
-# .venv\Scripts\activate.bat               # Windows PowerShell
-pip install -r requirements.txt
+- Python 3.10 or newer  
+- Dependencies listed in requirements.txt  
 
-# 2. Date + detecție
-python -m ingestion.real_data
-python -m detection.detect
+## Installation and Usage
 
-# 3. UI Premium (recomandat)
-python -m api.server
-# → http://localhost:5000
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/CristianStan18/GeoSentinel.git
+   cd GeoSentinel
+   ```
 
-## Comenzi utile
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-```bash
-python -m ingestion.real_data --only mines       # doar mine
-python -m ingestion.real_data --only tunnels     # doar tuneluri
-python -m ingestion.real_data --end 2025-06-01   # backtest Praid
+3. Run ingestion and detection:
+   ```bash
+   python -m ingestion.real_data
+   python -m detection.detect
+   ```
 
-python -m detection.detect                       # alerte (toate site-urile)
-python -m agent.brief_offline praid              # brief operațional (no API)
-python -m agent.brief praid                      # brief LLM (necesită cheie)
-```
+4. Start the dashboard server:
+   ```bash
+   python -m api.server
+   ```
+   Access the dashboard at http://localhost:5000.
 
-**Frontend (`api/server.py`):** dark cyberpunk, Plotly+Leaflet, recomandat
-pentru demo. Rulează pe http://localhost:5000.
+## Capabilities
 
-
-## Surse de date
-
-| Sursă | Status |
-|---|---|
-| Open-Meteo Weather (precipitații real) | Disponibilă |
-| Open-Meteo Air Quality (PM10, CO, NO2 suprafață real) | Disponibilă |
-| EMSC/USGS (catalog seismic real) | Disponibilă |
-| EGMS Sentinel-1 (subsidență InSAR) | Hook gata, necesită download manual |
-| Aer subteran (CO, NO2, PM10, CH4) | Modelat din aer suprafață real + activitate |
-| Convergometre + PGV + LiDAR + infiltrație tuneluri | Sintetic, hook senzori în prod |
-
-Toate sursele reale au **fallback automat la sintetic** dacă API-ul nu răspunde.
-
-### Semnale monitorizate
-
-**Mine:** subsidență InSAR, microseismicitate, infiltrație apă, CO, praf PM10,
-plus CH4 (metan) pentru minele de cărbune.
-
-**Tuneluri:** subsidență suprafață, seismicitate regională, convergență lining,
-vibrații dinamice (PGV), umiditate perete, fisuri LiDAR, infiltrație apă, CO, PM10.
+- Environmental and geospatial data ingestion  
+- Anomaly and risk detection logic  
+- Interactive dashboard visualization  
+- Offline and LLM-assisted operational briefings  
 
 ## Disclaimer
 
-GeoSentinel e un **decision support system**. Nu înlocuiește decizia inspectorilor
-autorizați (ITM, ANRM, CNAIR).
+GeoSentinel is a decision-support and analytical tool. Outputs should not be considered definitive assessments and should be validated by domain experts and official sources.
+
+## License
+
+No license is currently specified. Consider adding a license file to define usage and distribution terms.
