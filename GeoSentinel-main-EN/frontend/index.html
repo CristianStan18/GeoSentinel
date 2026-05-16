@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GeoSentinel — Early Warning Intelligence for Critical Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04080f;
+    --surface: #080e1a;
+    --surface2: #0d1626;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.15);
+    --text: #e8edf5;
+    --muted: #6b7a96;
+    --accent-mine: #00d4a0;
+    --accent-mine-dim: rgba(0,212,160,0.12);
+    --accent-mine-mid: rgba(0,212,160,0.35);
+    --accent-tunnel: #ff7d3b;
+    --accent-tunnel-dim: rgba(255,125,59,0.12);
+    --accent-tunnel-mid: rgba(255,125,59,0.35);
+    --accent-warning: #f5c842;
+    --accent-critical: #ff4444;
+    --grid: rgba(255,255,255,0.025);
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 12px;
+    --radius-lg: 20px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  section, nav, footer { position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 5vw;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(4,8,15,0.75);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    position: relative;
+  }
+
+  .nav-logo-icon svg { width: 100%; height: 100%; }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent-mine);
+    color: #000 !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500 !important;
+  }
+
+  .nav-cta:hover { background: #00f0b8 !important; color: #000 !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 5vw 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    animation: pulse-glow 8s ease-in-out infinite;
+  }
+
+  .hero-glow-1 {
+    width: 600px; height: 300px;
+    background: rgba(0,212,160,0.08);
+    top: 20%; left: 10%;
+    animation-delay: 0s;
+  }
+
+  .hero-glow-2 {
+    width: 600px; height: 300px;
+    background: rgba(255,125,59,0.08);
+    top: 30%; right: 5%;
+    animation-delay: 4s;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,160,0.08);
+    border: 1px solid rgba(0,212,160,0.25);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--accent-mine);
+    letter-spacing: 0.05em;
+    margin-bottom: 32px;
+    animation: fade-up 0.8s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--accent-mine);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    animation: fade-up 0.8s ease 0.1s both;
+  }
+
+  .hero-title .line1 { display: block; color: var(--text); }
+
+  .hero-title .line2 {
+    display: block;
+    background: linear-gradient(135deg, var(--accent-mine), var(--accent-tunnel));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    max-width: 620px;
+    font-size: 1.15rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    animation: fade-up 0.8s ease 0.2s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fade-up 0.8s ease 0.3s both;
+  }
+
+  .btn-primary {
+    background: var(--accent-mine);
+    color: #000;
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover { background: #00f0b8; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,212,160,0.3); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 14px 32px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border-bright);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover { border-color: var(--text); background: rgba(255,255,255,0.05); }
+
+  /* Hero stats strip */
+  .hero-stats {
+    display: flex;
+    gap: 60px;
+    margin-top: 80px;
+    padding-top: 48px;
+    border-top: 1px solid var(--border);
+    animation: fade-up 0.8s ease 0.4s both;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-stat-value {
+    font-family: 'Space Grotesk', var(--font-display);
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .hero-stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTOR TOGGLE ── */
+  .sector-toggle-section {
+    padding: 100px 5vw;
+    text-align: center;
+  }
+
+  .toggle-tabs {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 64px;
+  }
+
+  .toggle-tab {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toggle-tab.active-mine {
+    background: var(--accent-mine-dim);
+    border: 1px solid var(--accent-mine-mid);
+    color: var(--accent-mine);
+  }
+
+  .toggle-tab.active-tunnel {
+    background: var(--accent-tunnel-dim);
+    border: 1px solid var(--accent-tunnel-mid);
+    color: var(--accent-tunnel);
+  }
+
+  .sector-panel { display: none; }
+  .sector-panel.active { display: block; animation: fade-up 0.5s ease both; }
+
+  /* ── SECTION HEADERS ── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-mine);
+    margin-bottom: 16px;
+  }
+
+  .section-label.tunnel-label { color: var(--accent-tunnel); }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 580px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* ── CARDS GRID ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 56px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .card.mine-card::before { background: radial-gradient(circle at top right, var(--accent-mine-dim), transparent 60%); }
+  .card.tunnel-card::before { background: radial-gradient(circle at top right, var(--accent-tunnel-dim), transparent 60%); }
+
+  .card:hover { border-color: var(--border-bright); transform: translateY(-4px); }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+  }
+
+  .card-icon.mine { background: var(--accent-mine-dim); border: 1px solid var(--accent-mine-mid); }
+  .card-icon.tunnel { background: var(--accent-tunnel-dim); border: 1px solid var(--accent-tunnel-mid); }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .card-text { color: var(--muted); font-size: 0.9rem; line-height: 1.6; font-weight: 300; }
+
+  /* ── RISK METER ── */
+  .risk-demo {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin-top: 56px;
+  }
+
+  .risk-demo-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+
+  .risk-demo-sub {
+    color: var(--muted);
+    font-size: 0.875rem;
+    margin-bottom: 32px;
+  }
+
+  .risk-sites {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .risk-site {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .risk-site:hover { border-color: var(--border-bright); }
+
+  .risk-site-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .risk-badge {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+
+  .risk-low { background: rgba(0,212,160,0.12); color: var(--accent-mine); border: 1px solid var(--accent-mine-mid); }
+  .risk-medium { background: rgba(245,200,66,0.12); color: var(--accent-warning); border: 1px solid rgba(245,200,66,0.3); }
+  .risk-high { background: rgba(255,68,68,0.12); color: var(--accent-critical); border: 1px solid rgba(255,68,68,0.3); }
+
+  .risk-bar-wrap {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .risk-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .risk-bar.low { background: var(--accent-mine); width: 0; }
+  .risk-bar.medium { background: var(--accent-warning); width: 0; }
+  .risk-bar.high { background: var(--accent-critical); width: 0; }
+
+  .risk-metrics {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .risk-metric {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  /* ── ARCHITECTURE FLOW ── */
+  .arch-section {
+    padding: 100px 5vw;
+  }
+
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 56px;
+    flex-wrap: wrap;
+  }
+
+  .arch-step {
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+    position: relative;
+  }
+
+  .arch-icon-wrap {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: all 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .arch-step:hover .arch-icon-wrap { transform: scale(1.1); border-color: var(--accent-mine-mid); background: var(--accent-mine-dim); }
+
+  .arch-step-title {
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+  }
+
+  .arch-step-sub { font-size: 0.75rem; color: var(--muted); }
+
+  .arch-arrow {
+    font-size: 1.2rem;
+    color: var(--border-bright);
+    padding: 0 8px;
+    margin-bottom: 40px;
+    flex-shrink: 0;
+  }
+
+  /* ── REAL DATA SECTION ── */
+  .data-section {
+    padding: 100px 5vw;
+    background: linear-gradient(180deg, transparent, var(--surface2) 30%, var(--surface2) 70%, transparent);
+  }
+
+  .data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 56px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .data-grid { grid-template-columns: 1fr; }
+    .arch-flow { flex-direction: column; }
+    .arch-arrow { transform: rotate(90deg); }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 32px; }
+    .dual-grid { grid-template-columns: 1fr !important; }
+  }
+
+  .chart-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .chart-title { font-weight: 500; font-size: 0.9rem; }
+
+  .chart-live {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accent-mine);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .chart-live::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent-mine);
+    border-radius: 50%;
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  /* SVG Charts */
+  .sparkline { width: 100%; height: 120px; }
+
+  /* ── REPORT BUILDER ── */
+  .report-section {
+    padding: 100px 5vw;
+  }
+
+  .report-builder {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-top: 56px;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+  }
+
+  @media (max-width: 900px) {
+    .report-builder { grid-template-columns: 1fr; }
+  }
+
+  .report-sidebar {
+    background: var(--surface2);
+    border-right: 1px solid var(--border);
+    padding: 32px 24px;
+  }
+
+  .report-form-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+
+  .form-group { margin-bottom: 20px; }
+
+  .form-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.03em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .form-select, .form-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .form-select:focus, .form-input:focus { border-color: var(--accent-mine-mid); }
+
+  .form-range-wrap { display: flex; flex-direction: column; gap: 8px; }
+
+  .form-range {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .form-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    background: var(--accent-mine);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .form-range-val {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-mine);
+    text-align: right;
+  }
+
+  .btn-generate {
+    width: 100%;
+    background: var(--accent-mine);
+    color: #000;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 8px;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-generate:hover { background: #00f0b8; }
+
+  .report-preview {
+    padding: 32px;
+  }
+
+  .report-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .report-preview-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .report-preview-meta { font-size: 0.8rem; color: var(--muted); }
+
+  .report-risk-score {
+    text-align: center;
+  }
+
+  .risk-score-value {
+    font-family: 'IBM Plex Mono', var(--font-mono);
+    font-weight: 600;
+    font-size: 2.8rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .risk-score-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+
+  .report-findings {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .finding-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: var(--radius);
+    border-left: 3px solid;
+  }
+
+  .finding-row.critical { border-left-color: var(--accent-critical); }
+  .finding-row.warning { border-left-color: var(--accent-warning); }
+  .finding-row.ok { border-left-color: var(--accent-mine); }
+
+  .finding-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .finding-text { font-size: 0.875rem; line-height: 1.5; }
+  .finding-text strong { font-weight: 500; }
+  .finding-text .finding-detail { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+
+  .report-recommendations {
+    background: rgba(0,212,160,0.05);
+    border: 1px solid var(--accent-mine-mid);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .rec-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--accent-mine);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rec-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+
+  .rec-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .rec-list li::before { content: '→'; color: var(--accent-mine); flex-shrink: 0; }
+
+  /* ── DUAL SECTOR OVERVIEW ── */
+  .dual-section {
+    padding: 100px 5vw;
+  }
+
+  .dual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 56px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .dual-panel {
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dual-panel.mine-panel {
+    background: linear-gradient(135deg, var(--surface2) 0%, rgba(0,212,160,0.04) 100%);
+    border-right: 1px solid var(--border);
+  }
+
+  .dual-panel.tunnel-panel {
+    background: linear-gradient(135deg, var(--surface2) 0%, rgba(255,125,59,0.04) 100%);
+  }
+
+  .dual-panel-accent {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    display: inline-block;
+    font-weight: 500;
+  }
+
+  .mine-accent-text { color: var(--accent-mine); background: var(--accent-mine-dim); border: 1px solid var(--accent-mine-mid); }
+  .tunnel-accent-text { color: var(--accent-tunnel); background: var(--accent-tunnel-dim); border: 1px solid var(--accent-tunnel-mid); }
+
+  .dual-panel-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.8rem;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .dual-panel-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 28px; font-weight: 300; }
+
+  .use-cases { display: flex; flex-direction: column; gap: 10px; }
+
+  .use-case-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+  }
+
+  .use-case-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .mine-dot { background: var(--accent-mine); }
+  .tunnel-dot { background: var(--accent-tunnel); }
+
+  /* ── PRICING / BUSINESS MODEL ── */
+  .pricing-section {
+    padding: 100px 5vw;
+    background: linear-gradient(180deg, transparent, var(--surface2) 30%, var(--surface2) 70%, transparent);
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 56px;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .pricing-card:hover { transform: translateY(-4px); border-color: var(--border-bright); }
+
+  .pricing-card.featured {
+    border-color: var(--accent-mine-mid);
+    background: linear-gradient(135deg, var(--surface), rgba(0,212,160,0.05));
+  }
+
+  .pricing-tier { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 8px; }
+
+  .pricing-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  .pricing-desc { color: var(--muted); font-size: 0.85rem; margin-bottom: 24px; font-weight: 300; line-height: 1.5; }
+
+  .pricing-price {
+    font-family: 'Space Grotesk', var(--font-display);
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-period { font-size: 0.8rem; color: var(--muted); margin-bottom: 28px; }
+
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+  .pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .pricing-features li::before { content: '✓'; color: var(--accent-mine); font-weight: 700; }
+
+  .btn-plan {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .btn-plan-primary { background: var(--accent-mine); color: #000; }
+  .btn-plan-primary:hover { background: #00f0b8; }
+  .btn-plan-outline { background: transparent; color: var(--text); border: 1px solid var(--border-bright); }
+  .btn-plan-outline:hover { background: rgba(255,255,255,0.05); }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding: 100px 5vw;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-top: 56px;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  .contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .contact-icon {
+    width: 40px; height: 40px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-label { font-size: 0.8rem; color: var(--muted); margin-bottom: 2px; }
+  .contact-value { font-size: 0.95rem; font-weight: 500; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .contact-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .contact-input:focus { border-color: var(--accent-mine-mid); }
+
+  .contact-textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .contact-select-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .btn-contact {
+    background: var(--accent-mine);
+    color: #000;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+  }
+
+  .btn-contact:hover { background: #00f0b8; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  .footer-tagline { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.in-view { opacity: 1; transform: none; }
+
+  /* ── SIGNAL WAVE ── */
+  .signal-animation {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ── LIVE DATA TICKER ── */
+  .ticker-bar {
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 48px;
+    animation: ticker-scroll 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .ticker-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── CANVAS PULSE ── */
+  #pulse-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ── PROGRESS LOADING ── */
+  .progress-container {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 2s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+
+  /* ── SEPARATOR ── */
+  .sep {
+    width: 60px; height: 3px;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .sep-mine { background: var(--accent-mine); }
+  .sep-tunnel { background: var(--accent-tunnel); }
+  .sep-neutral { background: linear-gradient(90deg, var(--accent-mine), var(--accent-tunnel)); }
+
+  /* ── ALERT PULSE BADGES ── */
+  .alert-demo {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin-top: 24px;
+  }
+
+  .alert-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    animation: slide-in 0.5s ease both;
+  }
+
+  .alert-item.critical { background: rgba(255,68,68,0.08); border: 1px solid rgba(255,68,68,0.2); }
+  .alert-item.warning { background: rgba(245,200,66,0.08); border: 1px solid rgba(245,200,66,0.2); }
+  .alert-item.info { background: rgba(0,212,160,0.08); border: 1px solid var(--accent-mine-mid); }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .alert-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: alert-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes alert-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+    50% { box-shadow: 0 0 0 6px rgba(0,0,0,0); opacity: 0.8; }
+  }
+
+  .alert-dot.critical { background: var(--accent-critical); color: var(--accent-critical); }
+  .alert-dot.warning { background: var(--accent-warning); color: var(--accent-warning); }
+  .alert-dot.info { background: var(--accent-mine); color: var(--accent-mine); }
+
+  .alert-text { font-size: 0.85rem; flex: 1; }
+  .alert-time { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+
+  /* STICKY SECTOR INDICATOR */
+  .sector-indicator {
+    position: fixed;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sector-dot-nav {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border-bright);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .sector-dot-nav.active { background: var(--accent-mine); transform: scale(1.4); }
+
+  @media (max-width: 768px) { .sector-indicator { display: none; } }
+
+  /* TOOLTIP */
+  [data-tooltip] { position: relative; cursor: help; }
+  [data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--text);
+    pointer-events: none;
+    z-index: 200;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="14" stroke="#00d4a0" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="8" stroke="#ff7d3b" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <circle cx="16" cy="16" r="3" fill="#00d4a0"/>
+        <line x1="16" y1="2" x2="16" y2="8" stroke="#00d4a0" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="16" y1="24" x2="16" y2="30" stroke="#00d4a0" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    GeoSentinel
+  </a>
+  <ul class="nav-links">
+    <li><a href="#sectors">Sectors</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#report">Risk Report</a></li>
+    <li><a href="#pricing">Business Model</a></li>
+    <li><a href="#contact" class="nav-cta">Contact us</a></li>
+  </ul>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-bar" style="margin-top:72px; position:relative; z-index:1;">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-mine)"></span>Praid Mine — Subsidence: +2.1mm/month — ACTIVE MONITORING</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-warning)"></span>Lupeni, Jiu Valley — Increased microseismicity — MODERATE ALERT</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-tunnel)"></span>Meses Tunnel A3 — Convergence: -0.8mm/day — NOMINAL</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-tunnel)"></span>Margina-Holdea Tunnel A1 — Wall humidity: 67% — MONITORED</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-mine)"></span>Slanic — Groundwater infiltration — REPORT GENERATED</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-mine)"></span>Praid Mine — Subsidence: +2.1mm/month — ACTIVE MONITORING</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-warning)"></span>Lupeni, Jiu Valley — Increased microseismicity — MODERATE ALERT</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-tunnel)"></span>Meses Tunnel A3 — Convergence: -0.8mm/day — NOMINAL</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-tunnel)"></span>Margina-Holdea Tunnel A1 — Wall humidity: 67% — MONITORED</span>
+    <span class="ticker-item"><span class="ticker-dot" style="background:var(--accent-mine)"></span>Slanic — Groundwater infiltration — REPORT GENERATED</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="pulse-canvas"></canvas>
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    EARLY WARNING INTELLIGENCE — DUAL SECTOR
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line1">Before nature strikes, we warn.</span>
+    <span class="line2">GeoSentinel sees</span>
+    <span class="line1" style="font-size:clamp(2rem,5vw,4.5rem); color: var(--muted); font-weight:400;">before failure happens.</span>
+  </h1>
+
+  <p class="hero-sub">
+    We fuse InSAR satellite data, seismic sensor networks and agentic AI to detect weak signals in active mines and infrastructure tunnels — hours or days before any incident.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#sectors" class="btn-primary">Explore the solutions ↓</a>
+    <a href="#report" class="btn-secondary">Generate demo report</a>
+  </div>
+
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-value" style="color:var(--accent-mine)">±1mm</div>
+      <div class="hero-stat-label">InSAR subsidence precision</div>
+    </div>
+    <div>
+      <div class="hero-stat-value" style="color:var(--accent-tunnel)">72h</div>
+      <div class="hero-stat-label">warning before the event</div>
+    </div>
+    <div>
+      <div class="hero-stat-value" style="color:var(--accent-warning)">5+</div>
+      <div class="hero-stat-label">fused data sources</div>
+    </div>
+    <div>
+      <div class="hero-stat-value">&lt;5%</div>
+      <div class="hero-stat-label">validated SBAS relative error</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORS -->
+<section id="sectors" class="sector-toggle-section">
+  <div class="sep sep-neutral"></div>
+  <div class="section-label" style="color:var(--muted)">DUAL PLATFORM</div>
+  <h2 class="section-title">One engine. Two critical industries.</h2>
+  <p class="section-sub">Choose a sector to explore how GeoSentinel adapts to each industry’s specific needs.</p>
+
+  <div class="toggle-tabs">
+    <button class="toggle-tab active-mine" id="tab-mine" onclick="switchSector('mine')">
+      ⛏ Mines & Salt Mines
+    </button>
+    <button class="toggle-tab" id="tab-tunnel" onclick="switchSector('tunnel')">
+      🚇 Tunnels & Road Infrastructure
+    </button>
+  </div>
+
+  <!-- MINE PANEL -->
+  <div class="sector-panel active reveal" id="panel-mine">
+    <div class="sep sep-mine"></div>
+    <div class="section-label">MINING / SALT MINING SECTOR</div>
+    <h2 class="section-title">Salt mines and active mines.<br>Complete underground monitoring.</h2>
+    <p class="section-sub">Romania has active salt mines in Praid, Ocna Dej, Cacica and Slanic, coal mines in the Jiu Valley and uranium operations at Crucea-Botusana — all with critical monitoring needs that remain digitally uncovered.</p>
+
+    <div class="cards-grid">
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">📡</div>
+        <div class="card-title">Near-real-time Sentinel-1 InSAR</div>
+        <div class="card-text">We automatically process Copernicus EGMS data for any location in Romania. We detect subsidence from ±1mm/month with a 12-day revisit. Validated: relative error &lt;5% compared with classical leveling.</div>
+      </div>
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">🌊</div>
+        <div class="card-title">Multi-layer sensor network</div>
+        <div class="card-text">MEMS geophones (0.1–80Hz, 24-bit, ~$200–800/node), IoT sensors for gases and infiltration, GNSS RTK for absolute geodesy. LoRaWAN/4G communication, &lt;2W/node consumption.</div>
+      </div>
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">🧠</div>
+        <div class="card-title">AI agent for signal fusion</div>
+        <div class="card-text">Isolation Forest + LSTM Autoencoder on fused time series (seismic + InSAR + hydro + weather). RAG over ITM/ANRM incident databases. Alerts with automatically generated context.</div>
+      </div>
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">📋</div>
+        <div class="card-title">Geodetic risk report</div>
+        <div class="card-text">We automatically generate briefs for ITM inspectors: risk level, causal hypothesis and concrete recommendations. Auditable timestamped PDF format. Official deliverable for the authorized person.</div>
+      </div>
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">🗺️</div>
+        <div class="card-title">Geodetic sensor-placement analysis</div>
+        <div class="card-text">We use EGMS + Copernicus DEM + ANRM geology to determine optimal physical sensor positions. Output: GIS map with prioritized risk polygons.</div>
+      </div>
+      <div class="card mine-card reveal">
+        <div class="card-icon mine">🔄</div>
+        <div class="card-title">Backtesting on real cases</div>
+        <div class="card-text">Validated on retrospective EGMS 2019–2023 data for the Praid area. The system would have generated alerts days before documented events. Generalization demonstrated on international cases.</div>
+      </div>
+    </div>
+
+    <!-- Mine Risk Demo -->
+    <div class="risk-demo reveal" style="margin-top:56px;">
+      <div class="risk-demo-title">Current status — monitored mines (synthetic demo data)</div>
+      <div class="risk-demo-sub">Click any location for details. Real data is processed from EGMS/INFP/INHGA.</div>
+      <div class="risk-sites" id="mine-sites">
+        <div class="risk-site" onclick="showMineDetail('praid')">
+          <div class="risk-site-name">Praid Mine <span class="risk-badge risk-high">HIGH</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar high" data-val="78"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Subsidence: +4.2mm/month</span>
+            <span class="risk-metric">M1.1 (3 events/week)</span>
+          </div>
+        </div>
+        <div class="risk-site" onclick="showMineDetail('lupeni')">
+          <div class="risk-site-name">Lupeni (Jiu) <span class="risk-badge risk-medium">MODERATE</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar medium" data-val="52"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Subsidence: +1.8mm/month</span>
+            <span class="risk-metric">M0.8 (1 event/week)</span>
+          </div>
+        </div>
+        <div class="risk-site" onclick="showMineDetail('slanic')">
+          <div class="risk-site-name">Slanic <span class="risk-badge risk-medium">MODERATE</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar medium" data-val="44"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Subsidence: +1.2mm/month</span>
+            <span class="risk-metric">Infiltration: +18%</span>
+          </div>
+        </div>
+        <div class="risk-site" onclick="showMineDetail('ocnadej')">
+          <div class="risk-site-name">Ocna Dej <span class="risk-badge risk-low">LOW</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar low" data-val="22"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Subsidence: +0.4mm/month</span>
+            <span class="risk-metric">Nominal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="alert-demo reveal" style="margin-top:24px;">
+      <div style="font-size:0.85rem; font-weight:500; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span style="color:var(--accent-mine)">●</span> Recent alerts — GeoSentinel Agent
+      </div>
+      <div class="alert-item critical" style="animation-delay:0s">
+        <div class="alert-dot critical"></div>
+        <div class="alert-text">
+          <strong>Praid</strong> — Accelerated subsidence detected: +4.2mm/month (threshold exceeded: +3mm). Correlated with 3 M&lt;1.5 microseismic events in the last 7 days and +40mm precipitation.
+          <div style="color:var(--muted); font-size:0.78rem; margin-top:2px;">Recommendation: urgent inspection of the NE sector, reduce excavation activity</div>
+        </div>
+        <div class="alert-time">2h ago</div>
+      </div>
+      <div class="alert-item warning" style="animation-delay:0.15s">
+        <div class="alert-dot warning"></div>
+        <div class="alert-text">
+          <strong>Lupeni, Mina 2</strong> — Increasing microseismicity trend. Rate: 1.2 M&gt;0.5 events/day (monthly average: 0.4).
+        </div>
+        <div class="alert-time">Yesterday</div>
+      </div>
+      <div class="alert-item info" style="animation-delay:0.3s">
+        <div class="alert-dot info"></div>
+        <div class="alert-text">
+          <strong>Ocna Dej</strong> — All signals within normal parameters. Monthly report sent to the ITM Cluj inspector.
+        </div>
+        <div class="alert-time">3 days ago</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUNNEL PANEL -->
+  <div class="sector-panel" id="panel-tunnel">
+    <div class="sep sep-tunnel"></div>
+    <div class="section-label tunnel-label">TUNNELS / INFRASTRUCTURE SECTOR</div>
+    <h2 class="section-title">Highway tunnels.<br>Intelligent structural monitoring.</h2>
+    <p class="section-sub">Romania is now building the largest tunnel pipeline in its history: Meses (A3), Margina-Holdea (A1), Sibiu-Pitesti and the Unirii Motorway (A8). Each one requires geotechnical monitoring throughout construction and operation.</p>
+
+    <div class="cards-grid">
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">📐</div>
+        <div class="card-title">Lining convergence and deformation</div>
+        <div class="card-text">Inclinometers, extensometers, strain gauges and wireless convergometers. We detect tunnel convergence with sub-millimeter precision. Automatic alerts if the rate exceeds thresholds from European standards (EUROCODE 7).</div>
+      </div>
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">🔬</div>
+        <div class="card-title">Periodic terrestrial LiDAR</div>
+        <div class="card-text">Full 3D tunnel scans at defined intervals. We compare point clouds and automatically detect deformation zones, cracks or geometric changes. ±1–5mm precision, full cross-section coverage.</div>
+      </div>
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">💧</div>
+        <div class="card-title">Infiltration and water monitoring</div>
+        <div class="card-text">Piezometers for water pressure in the rock mass, wall humidity sensors and active leak detectors. We correlate with ANM precipitation and INHGA levels for post-rain infiltration prediction.</div>
+      </div>
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">🌍</div>
+        <div class="card-title">InSAR for surface subsidence</div>
+        <div class="card-text">We monitor the ground surface above the tunnel using Sentinel-1 data. We detect excavation-induced subsidence, settlement of adjacent structures and deformation along the motorway corridor. Free through EGMS.</div>
+      </div>
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">⚡</div>
+        <div class="card-title">Vibrations and dynamic loads</div>
+        <div class="card-text">Accelerometers for monitoring vibrations generated by traffic, blasting or earthquakes. We compare against regulatory limits. Real-time warning when safety thresholds are exceeded.</div>
+      </div>
+      <div class="card tunnel-card reveal">
+        <div class="card-icon tunnel">📊</div>
+        <div class="card-title">SHM report for operator and designer</div>
+        <div class="card-text">Complete Structural Health Monitoring: current status, trends, comparison with serviceability and ultimate limits. CNAIR/CNIR-ready format, exportable for an authorized geotechnical expert.</div>
+      </div>
+    </div>
+
+    <!-- Tunnel Risk Demo -->
+    <div class="risk-demo reveal" style="margin-top:56px;">
+      <div class="risk-demo-title">Current status — monitored tunnels (synthetic demo data)</div>
+      <div class="risk-demo-sub">Active tunnels in Romania — construction or operation phase.</div>
+      <div class="risk-sites">
+        <div class="risk-site">
+          <div class="risk-site-name" style="color:var(--accent-tunnel)">Meses Tunnel (A3) <span class="risk-badge risk-low">NOMINAL</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar low" data-val="18"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Convergence: -0.3mm/day</span>
+            <span class="risk-metric">Humidity: 54%</span>
+          </div>
+        </div>
+        <div class="risk-site">
+          <div class="risk-site-name" style="color:var(--accent-tunnel)">Margina-Holdea (A1) <span class="risk-badge risk-medium">WATCH</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar medium" data-val="48"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Convergence: -1.2mm/day</span>
+            <span class="risk-metric">New cracks: 2</span>
+          </div>
+        </div>
+        <div class="risk-site">
+          <div class="risk-site-name" style="color:var(--accent-tunnel)">Poiana Tunnel (Sibiu-Pitesti) <span class="risk-badge risk-low">NOMINAL</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar low" data-val="12"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Convergence: -0.1mm/day</span>
+            <span class="risk-metric">Stable structure</span>
+          </div>
+        </div>
+        <div class="risk-site">
+          <div class="risk-site-name" style="color:var(--accent-tunnel)">A8 Sector 1C Tunnel <span class="risk-badge risk-medium">CONSTRUCTION</span></div>
+          <div class="risk-bar-wrap"><div class="risk-bar medium" data-val="35"></div></div>
+          <div class="risk-metrics">
+            <span class="risk-metric">Active TBM</span>
+            <span class="risk-metric">Excavation monitoring</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tunnel Alerts -->
+    <div class="alert-demo reveal" style="margin-top:24px;">
+      <div style="font-size:0.85rem; font-weight:500; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <span style="color:var(--accent-tunnel)">●</span> Recent alerts — GeoSentinel Agent Infrastructure
+      </div>
+      <div class="alert-item warning" style="animation-delay:0s">
+        <div class="alert-dot warning"></div>
+        <div class="alert-text">
+          <strong>Margina-Holdea T1</strong> — Accelerated convergence in section km 2+340: -1.2mm/day (threshold: -1.0mm/day). 2 new cracks detected by LiDAR in the crown area.
+          <div style="color:var(--muted); font-size:0.78rem; margin-top:2px;">Recommendation: consolidation grouting, urgent visual inspection, report sent to the designer</div>
+        </div>
+        <div class="alert-time">Today 08:30</div>
+      </div>
+      <div class="alert-item info" style="animation-delay:0.15s">
+        <div class="alert-dot info"></div>
+        <div class="alert-text">
+          <strong>Meses Tunnel, A3</strong> — All parameters within design limits. Surface subsidence: -0.8mm/month (limit: -5mm/month). Monthly SHM report sent to CNAIR.
+        </div>
+        <div class="alert-time">Yesterday</div>
+      </div>
+      <div class="alert-item info" style="animation-delay:0.3s">
+        <div class="alert-dot info"></div>
+        <div class="alert-text">
+          <strong>A8 Sector 1C</strong> — Complete post-blast LiDAR scan finalized. Deformations within TBM parameters. 3D map updated in the GeoSentinel platform.
+        </div>
+        <div class="alert-time">2 days ago</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DUAL OVERVIEW -->
+<section class="dual-section" id="dual-overview">
+  <div class="reveal" style="text-align:center; margin-bottom:0;">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">SECTOR COMPARISON</div>
+    <h2 class="section-title">Same platform.<br>Two critical markets.</h2>
+  </div>
+  <div class="dual-grid dual-grid reveal">
+    <div class="dual-panel mine-panel">
+      <span class="dual-panel-accent mine-accent-text">MINING SECTOR</span>
+      <h3 class="dual-panel-title">Active mines<br>& Salt Mines</h3>
+      <p class="dual-panel-sub">Customers: Salrom, CNH, private coal and uranium mine operators. Continuous monitoring throughout the full life of the operation.</p>
+      <div class="use-cases">
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Detection of extraction-induced subsidence</div>
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Local microseismicity monitoring</div>
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Infiltration and salt dissolution warning</div>
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Automated reports for ITM</div>
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Backtesting on the Praid 2025 events</div>
+        <div class="use-case-item"><span class="use-case-dot mine-dot"></span>Geodetic sensor-placement analysis</div>
+      </div>
+      <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border);">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;">Addressable market in Romania</div>
+        <div style="font-family:'Space Grotesk',var(--font-display); font-weight:700; font-size:1.8rem; color:var(--accent-mine)">€2–5M/an</div>
+        <div style="font-size:0.78rem; color:var(--muted)">SaaS monitoring contracts + hardware pilot</div>
+      </div>
+    </div>
+    <div class="dual-panel tunnel-panel">
+      <span class="dual-panel-accent tunnel-accent-text">INFRASTRUCTURE SECTOR</span>
+      <h3 class="dual-panel-title">Tunnels &<br>Motorways</h3>
+      <p class="dual-panel-sub">Customers: CNAIR, CNIR, builders (UMB, PORR, Makyol). Pipeline: 20+ tunnels under construction in 2025–2030, funded by PNRR/EU.</p>
+      <div class="use-cases">
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>Lining convergence and deformation monitoring</div>
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>Crack detection through periodic LiDAR</div>
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>SHM reports for CNAIR/designer</div>
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>Dynamic-load vibration monitoring</div>
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>Digital twin updated from LiDAR</div>
+        <div class="use-case-item"><span class="use-case-dot tunnel-dot"></span>Compliance with EU Directive 2004/54/EC</div>
+      </div>
+      <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border);">
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;">Addressable market in Romania + regiune</div>
+        <div style="font-family:'Space Grotesk',var(--font-display); font-weight:700; font-size:1.8rem; color:var(--accent-tunnel)">€6–15M/an</div>
+        <div style="font-size:0.78rem; color:var(--muted)">construction projects + permanent operation</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="arch-section" id="architecture">
+  <div style="text-align:center;" class="reveal">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">SYSTEM ARCHITECTURE</div>
+    <h2 class="section-title">5 layers. One dashboard.</h2>
+    <p class="section-sub">From satellite and physical sensor to the inspector’s risk report — everything automated, traceable and auditable.</p>
+  </div>
+  <div class="arch-flow reveal">
+    <div class="arch-step">
+      <div class="arch-icon-wrap" data-tooltip="Sentinel-1 InSAR, EGMS, INFP, INHGA, ANM">🛰️</div>
+      <div class="arch-step-title">Public data</div>
+      <div class="arch-step-sub">Satellite + seismic catalog + hydro</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">
+      <div class="arch-icon-wrap" style="border-color:var(--accent-mine-mid)" data-tooltip="Geofoane MEMS, LiDAR, IoT, GNSS RTK">📡</div>
+      <div class="arch-step-title">Physical sensors</div>
+      <div class="arch-step-sub">IoT network deployed in the field</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">
+      <div class="arch-icon-wrap" data-tooltip="SBAS-InSAR pipeline, Isolation Forest, LSTM, change-point detection">⚙️</div>
+      <div class="arch-step-title">Processing & ML</div>
+      <div class="arch-step-sub">Multi-source anomaly detection</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">
+      <div class="arch-icon-wrap" data-tooltip="LLM agentic + RAG pe baza de incidente ITM/ANRM">🧠</div>
+      <div class="arch-step-title">Agent AI</div>
+      <div class="arch-step-sub">Contextualization + RAG</div>
+    </div>
+    <div class="arch-arrow">→</div>
+    <div class="arch-step">
+      <div class="arch-icon-wrap" style="border-color:var(--accent-tunnel-mid)" data-tooltip="Dashboard, alerte SMS/email, raport PDF auditabil">📊</div>
+      <div class="arch-step-title">Report & Alert</div>
+      <div class="arch-step-sub">Dashboard + PDF + notification</div>
+    </div>
+  </div>
+
+  <!-- PLOTLY INTERACTIVE CHARTS -->
+  <div class="reveal" style="margin-top:64px;">
+    <div class="chart-box" style="padding:0; overflow:hidden;">
+      <div class="chart-header" style="padding:20px 24px 0;">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div class="chart-title" style="font-size:1rem; font-weight:600;">Fused time series — live data</div>
+          <div class="chart-live">LIVE BACKEND</div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+          <button class="chart-site-btn active" onclick="loadSiteData('praid',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--accent-mine-mid); background:var(--accent-mine-dim); color:var(--accent-mine); cursor:pointer; font-family:var(--font-mono);">Praid (Salrom)</button>
+          <button class="chart-site-btn" onclick="loadSiteData('lupeni',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:var(--font-mono);">Lupeni (Jiu)</button>
+          <button class="chart-site-btn" onclick="loadSiteData('slanic',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:var(--font-mono);">Slanic</button>
+          <button class="chart-site-btn" onclick="loadSiteData('margina_holdea_t2',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--accent-tunnel-mid); background:var(--accent-tunnel-dim); color:var(--accent-tunnel); cursor:pointer; font-family:var(--font-mono);">Margina T2 Tunnel (A1)</button>
+          <button class="chart-site-btn" onclick="loadSiteData('curtea_arges',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:var(--font-mono);">Curtea Arges Tunnel</button>
+          <button class="chart-site-btn" onclick="loadSiteData('meses_a3',this)" style="font-size:0.75rem; padding:4px 12px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-family:var(--font-mono);">Meses Tunnel (A3)</button>
+          <span style="margin-left:auto; font-size:0.72rem; color:var(--muted); display:flex; align-items:center; gap:4px; font-family:var(--font-mono);">Zoom · Pan · Box Select · Hover</span>
+        </div>
+      </div>
+      <div id="plotly-fused" style="width:100%; min-height:540px; background:transparent;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MAP + LIVE STATUS SECTION                  -->
+<!-- ═══════════════════════════════════════════ -->
+<section id="map-section" style="padding:100px 5vw;">
+  <div style="text-align:center;" class="reveal">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">MONITORING NETWORK</div>
+    <h2 class="section-title">Live map — active sites.</h2>
+    <p class="section-sub">Each point represents a monitored location with data combined from public sources (EGMS, INFP, INHGA, ANM) and GeoSentinel’s own sensors. Click any point for full status.</p>
+  </div>
+
+  <div class="reveal" style="margin-top:56px; display:grid; grid-template-columns:1fr 400px; gap:24px; align-items:start;">
+    <!-- Map container -->
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; position:relative;">
+      <div style="position:absolute; top:12px; left:12px; z-index:500; display:flex; flex-direction:column; gap:8px; pointer-events:none;">
+        <div style="background:rgba(4,8,15,0.85); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:0.72rem; font-family:var(--font-mono);">
+          <div style="margin-bottom:6px; color:var(--muted); font-size:0.65rem; letter-spacing:0.1em;">LEGEND</div>
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;"><span style="width:12px;height:12px;background:#ff4444;border-radius:50%;display:inline-block;"></span> High risk</div>
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;"><span style="width:12px;height:12px;background:#f5c842;border-radius:50%;display:inline-block;"></span> Moderate risk</div>
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;"><span style="width:12px;height:12px;background:#00d4a0;border-radius:50%;display:inline-block;"></span> Nominal</div>
+          <div style="display:flex; align-items:center; gap:6px;"><span style="width:12px;height:12px;background:#ff7d3b;border-radius:50%;display:inline-block;"></span> Active tunnel</div>
+        </div>
+      </div>
+      <div id="gs-map" style="height:480px; width:100%;"></div>
+    </div>
+
+    <!-- Site Detail Panel -->
+    <div id="site-detail-panel" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; min-height:480px;">
+      <div id="sdp-placeholder" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:var(--muted); text-align:center; gap:12px;">
+        <div style="font-size:2rem; opacity:0.3;">📍</div>
+        <div style="font-size:0.9rem;">Select a point on the map to view the full status</div>
+      </div>
+      <div id="sdp-content" style="display:none;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+          <div>
+            <div id="sdp-icon" style="font-size:1.2rem; margin-bottom:4px;"></div>
+            <div id="sdp-name" style="font-family:var(--font-display); font-weight:800; font-size:1.3rem;"></div>
+            <div id="sdp-meta" style="font-size:0.78rem; color:var(--muted); margin-top:2px;"></div>
+          </div>
+          <div id="sdp-risk-badge" style="font-family:var(--font-mono); font-size:0.75rem; padding:6px 14px; border-radius:100px; font-weight:600;"></div>
+        </div>
+
+        <div id="sdp-alarm-box" style="display:none; background:rgba(255,68,68,0.08); border:1px solid rgba(255,68,68,0.3); border-radius:10px; padding:14px 16px; margin-bottom:16px;">
+          <div style="font-weight:600; color:#ff4444; font-size:0.9rem; margin-bottom:4px; display:flex; align-items:center; gap:8px;">
+            <span style="animation:blink 1s ease-in-out infinite; display:inline-block;">🚨</span> ACTIVE ALARM
+          </div>
+          <div id="sdp-alarm-text" style="font-size:0.83rem; color:var(--muted);"></div>
+        </div>
+
+        <div id="sdp-signals" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;"></div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <div style="font-size:0.75rem; color:var(--muted); margin-bottom:10px; font-family:var(--font-mono); letter-spacing:0.05em;">DATA SOURCES</div>
+          <div id="sdp-sources" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini metric strip below map -->
+  <div class="reveal" style="margin-top:24px; display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:12px;">
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">ACTIVE SITES</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-mine); line-height:1;">8</div>
+      <div style="font-size:0.75rem; color:var(--muted);">Mines + tunnels</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">INTEGRATED PUBLIC DATA</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-mine); line-height:1;">5</div>
+      <div style="font-size:0.75rem; color:var(--muted);">EGMS · INFP · INHGA · ANM · ANRM</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">ACTIVE ALERTS</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-critical); line-height:1;">2</div>
+      <div style="font-size:0.75rem; color:var(--muted);">Praid · Margina T1</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">SATELLITE CYCLE UPDATE</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-tunnel); line-height:1;">12<span style="font-size:1rem; font-weight:400; color:var(--muted);">days</span></div>
+      <div style="font-size:0.75rem; color:var(--muted);">Sentinel-1 C + 1A</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">ONLINE IoT SENSORS</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-mine); line-height:1;">47</div>
+      <div style="font-size:0.75rem; color:var(--muted);">MEMS + IoT + GNSS</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px;">
+      <div style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:6px;">PLATFORM UPTIME</div>
+      <div style="font-family:'Space Grotesk',var(--font-display); font-size:2rem; font-weight:800; color:var(--accent-mine); line-height:1;">99.7<span style="font-size:1rem; font-weight:400; color:var(--muted);">%</span></div>
+      <div style="font-size:0.75rem; color:var(--muted);">Last 12 months</div>
+    </div>
+  </div>
+</section>
+
+<!-- Plotly + Leaflet scripts and init -->
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// GEOSENTINEL — API-driven frontend
+// Connects to Flask backend at /api/*
+// ═══════════════════════════════════════
+
+const API_BASE = ''; // same origin
+
+// Global state — popolat din API
+let SITES_FROM_API = [];        // all sites (mapped to the legacy MAP_SITES structure)
+let CURRENT_TIMESERIES = null;  // data for the site currently displayed in the chart
+
+// ═══════════════════════════════════════
+// PLOTLY — chart-ul cu 3 subplot-uri
+// ═══════════════════════════════════════
+
+const PLOTLY_LAYOUT_BASE = {
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  plot_bgcolor: 'rgba(8,14,26,0.6)',
+  font: { family: "'IBM Plex Mono', 'JetBrains Mono', monospace", size: 11, color: '#6b7a96' },
+  margin: { l: 58, r: 30, t: 28, b: 32 },
+  xaxis: {
+    gridcolor: 'rgba(255,255,255,0.04)',
+    linecolor: 'rgba(255,255,255,0.1)',
+    tickfont: { size: 10, color: '#6b7a96' },
+    showline: true, showgrid: true, zeroline: false,
+  },
+  yaxis: {
+    gridcolor: 'rgba(255,255,255,0.04)',
+    linecolor: 'rgba(255,255,255,0.1)',
+    tickfont: { size: 10, color: '#6b7a96' },
+    showline: true, showgrid: true, zeroline: false,
+  },
+};
+
+async function buildSubplots(siteKey) {
+  const plotDiv = document.getElementById('plotly-fused');
+
+  // Clear any previous Plotly plot only if Plotly is loaded
+  // and the div actually contains a Plotly chart, not our spinner)
+  if (typeof Plotly !== 'undefined' && plotDiv.querySelector('.plot-container')) {
+    try { Plotly.purge(plotDiv); } catch (_) {}
+  }
+
+  // Display centered spinner
+  plotDiv.style.display = 'flex';
+  plotDiv.style.alignItems = 'center';
+  plotDiv.style.justifyContent = 'center';
+  plotDiv.innerHTML = `<div style="color:var(--muted); font-family:var(--font-mono); font-size:0.8rem; text-align:center;">
+    <div style="font-size:1.4rem; margin-bottom:8px; animation:spin 1s linear infinite; display:inline-block;">⟳</div><br>
+    Loading ${siteKey}...
+  </div>`;
+
+  // Fetch timeseries de la API
+  let data;
+  try {
+    const r = await fetch(`${API_BASE}/api/timeseries/${siteKey}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    data = await r.json();
+  } catch (e) {
+    console.error('Eroare fetch timeseries:', e);
+    plotDiv.style.display = 'flex';
+    plotDiv.innerHTML = `<div style="padding:40px; color:#ff7d3b; text-align:center; font-family:var(--font-mono);">
+      Eroare conexiune backend: ${e.message}<br>
+      Start the backend: <code>python -m api.server</code>
+    </div>`;
+    return;
+  }
+
+  CURRENT_TIMESERIES = data;
+  const isTunnel = data.is_tunnel;
+
+  // ── Construim lista de panouri dinamic ──
+  // Fiecare panou: { label, traces[] }
+  const panels = [];
+
+  // 1. SUBSIDENCE / DEFORMATION (always present)
+  if (isTunnel && data.convergence) {
+    panels.push({
+      label: 'Tunnel convergence — cumulative (mm)',
+      traces: [
+        {
+          x: data.convergence.dates, y: data.convergence.cumulative_mm,
+          type: 'scatter', mode: 'lines+markers',
+          line: { color: '#ff7d3b', width: 2, shape: 'spline' },
+          marker: { size: 4, color: '#ff7d3b' },
+          fill: 'tozeroy', fillcolor: 'rgba(255,125,59,0.07)',
+          hovertemplate: '<b>%{y:.2f}mm</b><extra>convergence</extra>',
+        },
+        {
+          x: [data.convergence.dates[0], data.convergence.dates[data.convergence.dates.length-1]],
+          y: [-20, -20],
+          type: 'scatter', mode: 'lines',
+          line: { color: '#ff4444', width: 1, dash: 'dash' },
+          hoverinfo: 'skip', showlegend: false,
+        },
+      ],
+    });
+  } else {
+    panels.push({
+      label: 'InSAR subsidence — cumulative displacement (mm)',
+      traces: [
+        {
+          x: data.insar.dates, y: data.insar.displacement_mm,
+          type: 'scatter', mode: 'lines+markers',
+          line: { color: '#3d9bff', width: 2, shape: 'spline' },
+          marker: { size: 5, color: '#3d9bff' },
+          fill: 'tozeroy', fillcolor: 'rgba(61,155,255,0.07)',
+          hovertemplate: '<b>%{y:.2f}mm</b><extra>InSAR</extra>',
+        },
+        {
+          x: [data.insar.dates[0], data.insar.dates[data.insar.dates.length-1]],
+          y: [-10, -10],
+          type: 'scatter', mode: 'lines',
+          line: { color: '#ff4444', width: 1, dash: 'dash' },
+          hoverinfo: 'skip', showlegend: false,
+        },
+      ],
+    });
+  }
+
+  // 2. MICROSEISMICITY (always present — both for mines and tunnels)
+  if (data.seismic && data.seismic.dates.length > 0) {
+    const mags = data.seismic.magnitudes;
+    const colors = mags.map(m => m > 2.0 ? '#ff4444' : m > 1.0 ? '#ff7d3b' : '#ffffff');
+    const sizes = mags.map(m => 6 + m * 4);
+    panels.push({
+      label: 'Microseismicity (magnitude)',
+      traces: [{
+        x: data.seismic.dates, y: mags,
+        type: 'scatter', mode: 'markers',
+        marker: { size: sizes, color: colors, opacity: 0.85,
+                  line: { width: 0.5, color: 'rgba(255,255,255,0.2)' } },
+        hovertemplate: '<b>M %{y:.2f}</b><br>%{x}<extra>seism</extra>',
+      }],
+    });
+  } else {
+    // Empty panel with message for areas with no seismicity
+    panels.push({
+      label: 'Microseismicity (no cataloged events)',
+      traces: [{
+        x: data.insar.dates, y: data.insar.dates.map(() => 0),
+        type: 'scatter', mode: 'lines',
+        line: { color: 'rgba(107,122,150,0.3)', width: 1 },
+        hoverinfo: 'skip',
+      }],
+    });
+  }
+
+  // 3. INFILTRATION / WATER
+  if (isTunnel && data.inflow) {
+    panels.push({
+      label: 'Tunnel water infiltration (l/min)',
+      traces: [{
+        x: data.inflow.dates, y: data.inflow.values,
+        type: 'scatter', mode: 'lines',
+        line: { color: '#00d4a0', width: 2 },
+        fill: 'tozeroy', fillcolor: 'rgba(0,212,160,0.12)',
+        hovertemplate: '<b>%{y:.1f} l/min</b><extra>infiltration</extra>',
+      }],
+    });
+  } else if (!isTunnel && data.hydro) {
+    panels.push({
+      label: 'Water infiltration (l/h)',
+      traces: [{
+        x: data.hydro.dates, y: data.hydro.infiltration_l_per_hour,
+        type: 'scatter', mode: 'lines',
+        line: { color: '#00d4a0', width: 2 },
+        fill: 'tozeroy', fillcolor: 'rgba(0,212,160,0.12)',
+        hovertemplate: '<b>%{y:.1f} l/h</b><extra>infiltration</extra>',
+      }],
+    });
+  }
+
+  // 4. WALL HUMIDITY (tunnels only)
+  if (isTunnel && data.humidity) {
+    panels.push({
+      label: 'Wall humidity (%)',
+      traces: [{
+        x: data.humidity.dates, y: data.humidity.values,
+        type: 'scatter', mode: 'lines',
+        line: { color: '#7aabff', width: 2 },
+        fill: 'tozeroy', fillcolor: 'rgba(122,171,255,0.1)',
+        hovertemplate: '<b>%{y:.1f}%</b><extra>umiditate</extra>',
+      }],
+    });
+  }
+
+  // 5. AIR QUALITY (always present — CO + PM10, plus CH4 for coal)
+  if (data.air) {
+    const airTraces = [
+      {
+        x: data.air.dates, y: data.air.co_mg_m3,
+        type: 'scatter', mode: 'lines',
+        name: 'CO (mg/m³)',
+        line: { color: '#f5c842', width: 1.8 },
+        hovertemplate: '<b>%{y:.2f}</b> CO<extra></extra>',
+      },
+      {
+        x: data.air.dates, y: data.air.pm10_mg_m3,
+        type: 'scatter', mode: 'lines',
+        name: 'PM10 (mg/m³)',
+        line: { color: '#ff9d5c', width: 1.5, dash: 'dot' },
+        hovertemplate: '<b>%{y:.2f}</b> PM10<extra></extra>',
+      },
+    ];
+    // CH4 only if values are significant (coal)
+    const ch4max = Math.max(...data.air.ch4_pct_vol);
+    let airLabel = 'Calitate aer — CO + PM10 (mg/m³)';
+    if (ch4max > 0.1) {
+      // Scale CH4 (%) so it is visible on the same axis — shown ×10
+      airTraces.push({
+        x: data.air.dates,
+        y: data.air.ch4_pct_vol.map(v => v * 10),
+        type: 'scatter', mode: 'lines',
+        name: 'CH4 ×10 (% vol)',
+        line: { color: '#ff4444', width: 2 },
+        hovertemplate: '<b>%{customdata:.3f}%</b> CH4<extra></extra>',
+        customdata: data.air.ch4_pct_vol,
+      });
+      airLabel = 'Calitate aer — CO, PM10, CH4×10';
+    }
+    panels.push({ label: airLabel, traces: airTraces, showLegend: true });
+  }
+
+  // ── Construim layout-ul cu N panouri ──
+  const N = panels.length;
+  const gap = 0.06;
+  const panelHeight = (1 - gap * (N - 1)) / N;
+
+  const allTraces = [];
+  const layout = {
+    ...PLOTLY_LAYOUT_BASE,
+    height: Math.max(540, N * 150),
+    margin: { l: 64, r: 30, t: 14, b: 40 },
+    showlegend: false,
+    annotations: [],
+  };
+
+  panels.forEach((panel, i) => {
+    // Panels are top to bottom: i=0 top
+    const axisNum = i + 1;
+    const yAxisKey = i === 0 ? 'yaxis' : `yaxis${axisNum}`;
+    const yRef = i === 0 ? 'y1' : `y${axisNum}`;
+    // Vertical domain (top to bottom)
+    const top = 1 - i * (panelHeight + gap);
+    const bottom = top - panelHeight;
+
+    layout[yAxisKey] = {
+      ...PLOTLY_LAYOUT_BASE.yaxis,
+      domain: [Math.max(0, bottom), top],
+      anchor: 'x',
+    };
+
+    // Add traces with the correct axis reference
+    panel.traces.forEach(tr => {
+      allTraces.push({ ...tr, xaxis: 'x', yaxis: yRef });
+    });
+
+    // Eticheta panoului
+    layout.annotations.push({
+      text: panel.label,
+      x: 0.01, y: top,
+      xref: 'paper', yref: 'paper',
+      showarrow: false,
+      font: { size: 10.5, color: '#9ba8c0' },
+      xanchor: 'left', yanchor: 'top',
+    });
+
+    // Legend for the air panel
+    if (panel.showLegend) {
+      panel.traces.forEach((tr, ti) => {
+        layout.annotations.push({
+          text: `● ${tr.name}`,
+          x: 0.99, y: top - 0.005 - ti * 0.022,
+          xref: 'paper', yref: 'paper',
+          showarrow: false,
+          font: { size: 8.5, color: tr.line.color },
+          xanchor: 'right', yanchor: 'top',
+        });
+      });
+    }
+  });
+
+  layout.xaxis = { ...PLOTLY_LAYOUT_BASE.xaxis, domain: [0, 1], anchor: 'y1' };
+
+  const config = {
+    responsive: true,
+    displayModeBar: true,
+    modeBarButtonsToAdd: ['select2d', 'lasso2d'],
+    modeBarButtonsToRemove: ['toImage', 'sendDataToCloud', 'autoScale2d'],
+    displaylogo: false,
+    scrollZoom: true,
+    locale: 'ro',
+  };
+
+  // Fully reset the div before drawing: remove the spinner
+  // and remove the flex-centering styles used for the spinner
+  plotDiv.innerHTML = '';
+  plotDiv.style.display = 'block';
+  plotDiv.style.alignItems = '';
+  plotDiv.style.justifyContent = '';
+
+  if (typeof Plotly === 'undefined') {
+    plotDiv.innerHTML = `<div style="padding:40px; color:#ff7d3b; text-align:center; font-family:var(--font-mono);">
+      Plotly did not load. Check your internet connection (Plotly CDN).
+    </div>`;
+    return;
+  }
+
+  Plotly.newPlot(plotDiv, allTraces, layout, config);
+}
+
+function loadSiteData(key, btn) {
+  document.querySelectorAll('.chart-site-btn').forEach(b => {
+    b.style.background = 'transparent';
+    b.style.color = 'var(--muted)';
+    b.style.borderColor = 'var(--border)';
+  });
+  // Determine whether it is a tunnel from the prefix
+  const isTunnel = key.includes('margina') || key.includes('meses') ||
+                   key.includes('poiana') || key.includes('curtea');
+  btn.style.background = isTunnel ? 'var(--accent-tunnel-dim)' : 'var(--accent-mine-dim)';
+  btn.style.color = isTunnel ? 'var(--accent-tunnel)' : 'var(--accent-mine)';
+  btn.style.borderColor = isTunnel ? 'var(--accent-tunnel-mid)' : 'var(--accent-mine-mid)';
+  buildSubplots(key);
+}
+
+// ═══════════════════════════════════════
+// LEAFLET MAP — alimentat din /api/sites
+// ═══════════════════════════════════════
+
+let gsMap;
+
+async function initMap() {
+  // Fetch lista de site-uri de la API
+  try {
+    const r = await fetch(`${API_BASE}/api/sites`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    SITES_FROM_API = await r.json();
+  } catch (e) {
+    console.error('Eroare fetch sites:', e);
+    document.getElementById('gs-map').innerHTML =
+      `<div style="padding:40px; color:#ff7d3b; text-align:center; font-family:var(--font-mono);">
+        Flask backend is not responding. Start it with: python -m api.server
+      </div>`;
+    return;
+  }
+
+  gsMap = L.map('gs-map', { zoomControl: true, scrollWheelZoom: false }).setView([45.9, 24.9], 6);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap contributors © CARTO',
+    subdomains: 'abcd', maxZoom: 14,
+  }).addTo(gsMap);
+
+  SITES_FROM_API.forEach(site => {
+    const isTunnel = site.type === 'tunnel';
+    const radius = isTunnel ? 12 : 16;
+    const color = site.riskColor;
+
+    const marker = L.circleMarker([site.lat, site.lng], {
+      radius: radius,
+      fillColor: color,
+      color: color,
+      weight: 2,
+      fillOpacity: 0.45,
+      opacity: 0.9,
+    }).addTo(gsMap);
+
+    // Animated pulse for alerts — non-interactive so it does not block marker clicks
+    if (site.alarm) {
+      const pulseMarker = L.circleMarker([site.lat, site.lng], {
+        radius: radius + 8,
+        fillColor: color,
+        color: color,
+        weight: 1,
+        fillOpacity: 0.0,
+        opacity: 0.4,
+        interactive: false,  // fix: does not intercept mouse events
+        bubblingMouseEvents: false,
+      }).addTo(gsMap);
+
+      // Add pointer-events:none to the SVG element generated by Leaflet
+      pulseMarker.on('add', function() {
+        const el = pulseMarker.getElement();
+        if (el) el.style.pointerEvents = 'none';
+      });
+
+      let scale = 1;
+      let growing = true;
+      setInterval(() => {
+        scale += growing ? 0.04 : -0.04;
+        if (scale > 1.4) growing = false;
+        if (scale < 1.0) growing = true;
+        pulseMarker.setRadius((radius + 8) * scale);
+        pulseMarker.setStyle({ opacity: 0.6 - (scale - 1) * 1.5 });
+      }, 60);
+    }
+
+    marker.on('click', () => showSiteDetail(site));
+    marker.bindTooltip(`${site.name}`, {
+      className: 'gs-tooltip',
+      direction: 'top',
+    });
+  });
+
+  // Style tooltips
+  const styleEl = document.createElement('style');
+  styleEl.textContent = `.gs-tooltip { background: #0d1626 !important; border: 1px solid rgba(255,255,255,0.2) !important; color: #e8edf5 !important; font-family: 'JetBrains Mono', monospace; font-size: 11px; box-shadow: none !important; } .gs-tooltip::before { display: none; } .leaflet-tooltip-top.gs-tooltip::before { display: none; }`;
+  document.head.appendChild(styleEl);
+}
+
+function showSiteDetail(site) {
+  document.getElementById('sdp-placeholder').style.display = 'none';
+  document.getElementById('sdp-content').style.display = 'block';
+
+  document.getElementById('sdp-icon').textContent = site.type === 'tunnel' ? '🚇' : '⛏';
+  document.getElementById('sdp-name').textContent = site.name;
+  document.getElementById('sdp-meta').textContent =
+    `Operator: ${site.operator} · Type: ${site.tip} · Status: ${site.status} · ${site.adancime}`;
+
+  const badge = document.getElementById('sdp-risk-badge');
+  badge.textContent = site.riskLabel;
+  const isAlarm = site.alarm;
+  const isMedium = site.risk === 'medium';
+  badge.style.background = isAlarm ? 'rgba(255,68,68,0.12)' : isMedium ? 'rgba(245,200,66,0.12)' : 'rgba(0,212,160,0.12)';
+  badge.style.color = site.riskColor;
+  badge.style.border = `1px solid ${site.riskColor}44`;
+
+  const alarmBox = document.getElementById('sdp-alarm-box');
+  if (site.alarm && site.alarmText) {
+    alarmBox.style.display = 'block';
+    document.getElementById('sdp-alarm-text').textContent = site.alarmText;
+  } else {
+    alarmBox.style.display = 'none';
+  }
+
+  const signalsEl = document.getElementById('sdp-signals');
+  signalsEl.innerHTML = site.signals.map(sig => {
+    const sigColor = sig.alert === 'alarm' ? '#ff4444' : sig.alert === 'watch' ? '#f5c842' : '#00d4a0';
+    return `<div style="background:var(--surface2); border-radius:8px; padding:12px 14px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.83rem;">
+          <span style="width:8px;height:8px;border-radius:50%;background:${sigColor};display:inline-block;flex-shrink:0;"></span>
+          ${sig.label}
+        </div>
+      </div>
+      <div style="font-family:var(--font-mono); font-size:0.8rem; color:${sigColor}; margin-bottom:2px;">${sig.value}</div>
+      <div style="font-size:0.72rem; color:var(--muted);">threshold: ${sig.threshold}</div>
+    </div>`;
+  }).join('');
+
+  const sourcesEl = document.getElementById('sdp-sources');
+  sourcesEl.innerHTML = site.sources.map(s =>
+    `<span style="font-family:var(--font-mono); font-size:0.68rem; padding:3px 8px; border-radius:4px; border:1px solid var(--border-bright); color:var(--muted);">${s}</span>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════
+// Init
+// ═══════════════════════════════════════
+window.addEventListener('load', () => {
+  buildSubplots('praid');
+  initMap();
+});
+</script>
+
+<!-- REPORT BUILDER -->
+<section class="report-section" id="report">
+  <div style="text-align:center;" class="reveal">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">REPORT GENERATOR</div>
+    <h2 class="section-title">Generate a risk report now.</h2>
+    <p class="section-sub">Simulate a complete assessment for any location. The report includes structural analysis, the hazard scenario and recommendations for the authorized expert.</p>
+  </div>
+
+  <div class="report-builder reveal">
+    <div class="report-sidebar">
+      <div class="report-form-title">⚙ Assessment parameters</div>
+
+      <div class="form-group">
+        <label class="form-label">Sector</label>
+        <select class="form-select" id="sector-select" onchange="updateReport()">
+          <option value="mine">Minier / Salinar</option>
+          <option value="tunnel">Motorway Tunnel</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <select class="form-select" id="location-select" onchange="updateReport()">
+          <option>Praid, Harghita</option>
+          <option>Slanic, Prahova</option>
+          <option>Lupeni, Hunedoara</option>
+          <option>Margina-Holdea (A1)</option>
+          <option>Meses Tunnel (A3)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Analysis type</label>
+        <select class="form-select" id="analysis-type" onchange="updateReport()">
+          <option>Current risk — snapshot</option>
+          <option>30-day forecast</option>
+          <option>Natural hazard simulation</option>
+          <option>Structural breach analysis</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Simulated seismic intensity (Mw)</label>
+        <div class="form-range-wrap">
+          <input type="range" class="form-range" id="seismic-range" min="1" max="6" step="0.5" value="3" oninput="document.getElementById('seismic-val').textContent=this.value+'Mw'; updateReport()">
+          <div class="form-range-val" id="seismic-val">3.0Mw</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Precipitation level (percentile)</label>
+        <div class="form-range-wrap">
+          <input type="range" class="form-range" id="rain-range" min="0" max="100" step="5" value="50" oninput="document.getElementById('rain-val').textContent=this.value+'%'; updateReport()" style="accent-color:var(--accent-tunnel)">
+          <div class="form-range-val" id="rain-val" style="color:var(--accent-tunnel)">50%</div>
+        </div>
+      </div>
+
+      <button class="btn-generate" onclick="generateReport()">
+        <span id="gen-icon">📋</span>
+        <span id="gen-text">Generate report</span>
+      </button>
+    </div>
+
+    <div class="report-preview" id="report-preview">
+      <div class="report-preview-header">
+        <div>
+          <div class="report-preview-title" id="rp-title">Risk assessment report — Praid, Harghita</div>
+          <div class="report-preview-meta" id="rp-meta">GeoSentinel v2.1 · <span id="rp-date">May 15, 2026, 14:32</span> · Sector: Mining/Salt Mining</div>
+        </div>
+        <div class="report-risk-score">
+          <div class="risk-score-value" id="rp-score" style="color:var(--accent-critical)">78</div>
+          <div class="risk-score-label">RISK SCORE / 100</div>
+        </div>
+      </div>
+
+      <div class="report-findings" id="rp-findings">
+        <div class="finding-row critical">
+          <div class="finding-icon">🔴</div>
+          <div class="finding-text">
+            <strong>Accelerated subsidence detected</strong>: +4.2mm/month (critical threshold: +3mm/month). Linear trend over the last 8 weeks from EGMS/Sentinel-1 data.
+            <div class="finding-detail">Source: EGMS 2019–2023 + field sensors · Conf: 94%</div>
+          </div>
+        </div>
+        <div class="finding-row warning">
+          <div class="finding-icon">🟡</div>
+          <div class="finding-text">
+            <strong>Increased induced microseismicity</strong>: 3 M0.8–1.3 events in the last 7 days. Normal historical rate: 0.4 events/week.
+            <div class="finding-detail">Source: INFP catalog · Average depth: 320m</div>
+          </div>
+        </div>
+        <div class="finding-row warning">
+          <div class="finding-icon">🟡</div>
+          <div class="finding-text">
+            <strong>Correlated increased precipitation</strong>: +38mm above the monthly average. Temporal correlation with accelerated subsidence.
+            <div class="finding-detail">Source: ANM Open-Meteo · Pearson correlation: 0.71</div>
+          </div>
+        </div>
+        <div class="finding-row ok">
+          <div class="finding-icon">🟢</div>
+          <div class="finding-text">
+            <strong>Mine gases within normal limits</strong>: CH4 0.2% (threshold: 1%), CO 8ppm (threshold: 25ppm). Ventilation operational.
+            <div class="finding-detail">Source: Field IoT sensors · Last reading: 12 min ago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-recommendations" id="rp-recs">
+        <div class="rec-title">🎯 Recommendations for authorized expert (geotechnician/ITM inspector)</div>
+        <ul class="rec-list">
+          <li>Urgent inspection of the mine’s NE sector — visual check of ceilings and walls, report within 24h</li>
+          <li>Temporary 30% reduction in excavation activity until full assessment</li>
+          <li>Install additional convergence sensors in the maximum-subsidence area (coordinates: 46.571°N, 25.094°E)</li>
+          <li>Notify ITM Harghita under Art. 34 of Law 85/2003 on the Mining Code</li>
+          <li>Re-evaluate in 7 days or when any M&gt;1.0 event appears</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+        <button class="btn-secondary" style="padding:10px 20px; font-size:0.85rem;">⬇ Export PDF</button>
+        <button class="btn-secondary" style="padding:10px 20px; font-size:0.85rem;">📧 Send to inspector</button>
+        <button class="btn-secondary" style="padding:10px 20px; font-size:0.85rem;">🔗 Shareable link</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS MODEL / PRICING -->
+<section class="pricing-section" id="pricing">
+  <div style="text-align:center;" class="reveal">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">BUSINESS MODEL</div>
+    <h2 class="section-title">Flexible. Scalable. Fast ROI.</h2>
+    <p class="section-sub">From pilot to long-term enterprise contract. Every tier includes hardware consultation, setup and team training.</p>
+  </div>
+
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <div class="pricing-tier">TIER 01</div>
+      <div class="pricing-name">Pilot & POC</div>
+      <div class="pricing-desc">Single-location demonstration with real data. Ideal for hackathons and for convincing management.</div>
+      <div class="pricing-price" style="color:var(--accent-mine)">€8k</div>
+      <div class="pricing-period">/ 3-month pilot project</div>
+      <ul class="pricing-features">
+        <li>Retrospective EGMS analysis (5 years)</li>
+        <li>Online demo dashboard</li>
+        <li>1 full risk report</li>
+        <li>Management presentation + boardroom deck</li>
+        <li>Sensor-placement recommendation</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline" onclick="scrollToContact()">Request pilot</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-tier">TIER 02 — RECOMMENDED</div>
+      <div class="pricing-name">Active Monitoring</div>
+      <div class="pricing-desc">Complete system with physical sensors + satellite + AI agent. Monthly SaaS with automated reports for the inspector.</div>
+      <div class="pricing-price" style="color:var(--accent-mine)">€6k</div>
+      <div class="pricing-period">/ month · minimum 12-month contract</div>
+      <ul class="pricing-features">
+        <li>Installed 8–12 MEMS sensor network</li>
+        <li>Automated Sentinel-1 InSAR pipeline</li>
+        <li>24/7 AI agent with SMS/email alerts</li>
+        <li>Monthly ITM-ready reports</li>
+        <li>Multi-location dashboard</li>
+        <li>API for existing-system integration</li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="scrollToContact()">Request quote</button>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">TIER 03</div>
+      <div class="pricing-name">Enterprise Tunnel</div>
+      <div class="pricing-desc">Complete package for highway tunnels under construction or operation. Includes periodic LiDAR and SHM reports.</div>
+      <div class="pricing-price" style="color:var(--accent-tunnel)">€15k+</div>
+      <div class="pricing-period">/ month or per project (construction)</div>
+      <ul class="pricing-features">
+        <li>Convergence sensors + piezometers</li>
+        <li>Monthly LiDAR scan</li>
+        <li>EUROCODE-compliant SHM reports</li>
+        <li>Periodically updated digital twin</li>
+        <li>Direct channel with designer and CNAIR</li>
+        <li>24/7 geotechnical expert support</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline" onclick="scrollToContact()">Direct contact</button>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">TIER 04</div>
+      <div class="pricing-name">Ad-hoc Report</div>
+      <div class="pricing-desc">One-time risk assessment based on existing data. Deliverable for the authorized expert, with no recurring contract.</div>
+      <div class="pricing-price" style="color:var(--muted)">€2,500</div>
+      <div class="pricing-period">/ raport complet · livrare 5 days</div>
+      <ul class="pricing-features">
+        <li>Location satellite-data analysis</li>
+        <li>Quantified risk score</li>
+        <li>Identified structural vulnerabilities</li>
+        <li>Recommendations for the geotechnician</li>
+        <li>Auditable timestamped PDF</li>
+      </ul>
+      <button class="btn-plan btn-plan-outline" onclick="scrollToContact()">Order report</button>
+    </div>
+  </div>
+
+  <!-- Revenue projection mini chart -->
+  <div class="chart-box reveal" style="margin-top:40px; max-width:680px; margin-left:auto; margin-right:auto;">
+    <div class="chart-header">
+      <div class="chart-title">Cumulative revenue projection (conservative scenario, Romania)</div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; align-items:end; height:120px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-mine)">€80k</div>
+        <div style="width:100%; background:var(--accent-mine); border-radius:4px 4px 0 0; height:15%;"></div>
+        <div style="font-size:0.75rem; color:var(--muted)">Year 1</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-mine)">€320k</div>
+        <div style="width:100%; background:var(--accent-mine); border-radius:4px 4px 0 0; height:35%; opacity:0.85;"></div>
+        <div style="font-size:0.75rem; color:var(--muted)">Year 2</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-warning)">€850k</div>
+        <div style="width:100%; background:var(--accent-warning); border-radius:4px 4px 0 0; height:60%;"></div>
+        <div style="font-size:0.75rem; color:var(--muted)">Year 3</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-tunnel)">€1.8M</div>
+        <div style="width:100%; background:var(--accent-tunnel); border-radius:4px 4px 0 0; height:80%; opacity:0.85;"></div>
+        <div style="font-size:0.75rem; color:var(--muted)">Year 4</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-tunnel)">€3.5M</div>
+        <div style="width:100%; background:linear-gradient(to top, var(--accent-mine), var(--accent-tunnel)); border-radius:4px 4px 0 0; height:100%;"></div>
+        <div style="font-size:0.75rem; color:var(--muted)">Year 5</div>
+      </div>
+    </div>
+    <div style="font-size:0.75rem; color:var(--muted); margin-top:12px;">Active mines (green) + infrastructure tunnels (orange) · Scenario includes 3 mining contracts + 5 motorway tunnels</div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div style="text-align:center;" class="reveal">
+    <div class="sep sep-neutral"></div>
+    <div class="section-label" style="color:var(--muted)">CONTACT & COLLABORATION</div>
+    <h2 class="section-title">Building together<br>infrastructure safety.</h2>
+    <p class="section-sub">We are a team of engineers, data scientists and geotechnical specialists dedicated to preventing risk through technology. Contact us for a pilot or a free assessment.</p>
+  </div>
+
+  <div class="contact-grid reveal">
+    <div>
+      <div class="contact-info-item">
+        <div class="contact-icon">🏢</div>
+        <div>
+          <div class="contact-label">Company</div>
+          <div class="contact-value">GeoSentinel SRL</div>
+          <div style="font-size:0.85rem; color:var(--muted); margin-top:2px;">Early Warning Intelligence for critical infrastructure</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Romania — nationwide operation</div>
+          <div style="font-size:0.85rem; color:var(--muted); margin-top:2px;">Deployment: mines & tunnels across the country</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">contact@geosentinel.ro</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon">🤝</div>
+        <div>
+          <div class="contact-label">Partnerships</div>
+          <div class="contact-value">Open to integrators, builders and geotechnical consultants</div>
+        </div>
+      </div>
+
+      <div style="margin-top:32px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px;">
+        <div style="font-weight:600; margin-bottom:12px; font-size:0.9rem;">Why GeoSentinel?</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:0.85rem; color:var(--muted)">
+            <span style="color:var(--accent-mine); flex-shrink:0">✓</span>
+            The only system that fuses satellite + physical sensors + agentic AI for underground infrastructure in Romania
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:0.85rem; color:var(--muted)">
+            <span style="color:var(--accent-mine); flex-shrink:0">✓</span>
+            Existing public data (EGMS, INFP) as a validated baseline — no dependency on proprietary data
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:0.85rem; color:var(--muted)">
+            <span style="color:var(--accent-mine); flex-shrink:0">✓</span>
+            Reports compatible with ITM legal requirements and EUROCODE standards — official deliverables
+          </div>
+          <div style="display:flex; align-items:flex-start; gap:10px; font-size:0.85rem; color:var(--muted)">
+            <span style="color:var(--accent-mine); flex-shrink:0">✓</span>
+            5–10× lower price than international solutions (Fugro, Nova Metrix) with superior AI capabilities
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="submitContact(event)">
+      <div class="contact-select-wrap">
+        <input class="contact-input" placeholder="Your name *" required>
+        <input class="contact-input" placeholder="Company *" required>
+      </div>
+      <input class="contact-input" type="email" placeholder="Email *" required>
+      <div class="contact-select-wrap">
+        <select class="contact-input" style="-webkit-appearance:none;">
+          <option>Sector: Mining/Salt Mining</option>
+          <option>Sector: Tunnel/Motorway</option>
+          <option>Both sectors</option>
+          <option>Technical partnership</option>
+          <option>Investment / VC</option>
+        </select>
+        <select class="contact-input" style="-webkit-appearance:none;">
+          <option>Type: Free pilot</option>
+          <option>Type: Online demo</option>
+          <option>Type: Commercial offer</option>
+          <option>Type: Ad-hoc report</option>
+        </select>
+      </div>
+      <textarea class="contact-input contact-textarea" placeholder="Describe the project or location of interest. The more details you provide, the more relevant our preliminary assessment will be..."></textarea>
+      <button class="btn-contact" type="submit" id="contact-btn">
+        Send request →
+      </button>
+      <div id="contact-success" style="display:none; color:var(--accent-mine); font-size:0.875rem; text-align:center; padding:12px; background:var(--accent-mine-dim); border:1px solid var(--accent-mine-mid); border-radius:10px;">
+        ✓ Message sent! We will contact you within 24h to discuss the details.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">
+      <span style="background:linear-gradient(135deg,var(--accent-mine),var(--accent-tunnel)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">GeoSentinel</span>
+    </div>
+    <div class="footer-tagline">Early Warning Intelligence · Mines & Critical Infrastructure</div>
+  </div>
+  <div class="footer-links">
+    <a href="#hero">Home</a>
+    <a href="#sectors">Sectors</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#report">Report</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 GeoSentinel SRL. All rights reserved.</div>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+// ── Pulse Canvas ──
+const canvas = document.getElementById('pulse-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, rings = [];
+
+function resizeCanvas() {
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+
+function addRing() {
+  rings.push({ x: W/2 + (Math.random()-0.5)*200, y: H/2 + (Math.random()-0.5)*100, r: 0, maxR: 200 + Math.random()*150, speed: 0.5+Math.random(), color: Math.random()>0.5?'0,212,160':'255,125,59' });
+}
+
+function drawCanvas() {
+  ctx.clearRect(0, 0, W, H);
+  rings = rings.filter(ring => ring.r < ring.maxR);
+  rings.forEach(ring => {
+    ring.r += ring.speed;
+    const alpha = (1 - ring.r/ring.maxR) * 0.3;
+    ctx.beginPath();
+    ctx.arc(ring.x, ring.y, ring.r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(${ring.color},${alpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+  requestAnimationFrame(drawCanvas);
+}
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+setInterval(addRing, 2000);
+addRing(); addRing();
+drawCanvas();
+
+// ── Sector Switch ──
+function switchSector(sector) {
+  document.getElementById('panel-mine').classList.toggle('active', sector==='mine');
+  document.getElementById('panel-tunnel').classList.toggle('active', sector==='tunnel');
+  document.getElementById('tab-mine').className = 'toggle-tab ' + (sector==='mine' ? 'active-mine' : '');
+  document.getElementById('tab-tunnel').className = 'toggle-tab ' + (sector==='tunnel' ? 'active-tunnel' : '');
+}
+
+// ── Animate Risk Bars ──
+function animateBars() {
+  document.querySelectorAll('.risk-bar[data-val]').forEach(bar => {
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        bar.style.width = bar.dataset.val + '%';
+        obs.disconnect();
+      }
+    });
+    obs.observe(bar);
+  });
+}
+animateBars();
+
+// ── Report Generator ──
+const reportData = {
+  mine: {
+    'Praid, Harghita': { score:78, color:'var(--accent-critical)', label:'HIGH RISK', findings:[
+      {type:'critical', text:'<strong>Accelerated subsidence detected</strong>: +4.2mm/month (critical threshold: +3mm). Linear trend confirmed by EGMS.', detail:'Source: EGMS Sentinel-1 · Conf: 94%'},
+      {type:'warning', text:'<strong>3 M0.8–1.3 microseismic events</strong> in the last week (normal rate: 0.4/week).', detail:'Source: INFP catalog · Depth: 320m'},
+      {type:'ok', text:'<strong>Nominal mine gases</strong>: CH4 0.2%, CO 8ppm — within limits.', detail:'IoT sensors · Last reading: 12 min ago'},
+    ], recs:['Urgent NE sector inspection — ceiling check, 24h report','Reduce excavation by 30% until full assessment','Install additional convergometers (46.571°N, 25.094°E)','Notify ITM Harghita under Law 85/2003']},
+    'Slanic, Prahova': { score:52, color:'var(--accent-warning)', label:'MODERATE RISK', findings:[
+      {type:'warning', text:'<strong>Water infiltration increased by +18%</strong> compared with the monthly average. Correlated with precipitation.', detail:'Piezometer sensors + INHGA'},
+      {type:'warning', text:'<strong>Subsidence +1.2mm/month</strong> — at the watch threshold limit (+1mm).', detail:'EGMS Sentinel-1 · Conf: 88%'},
+      {type:'ok', text:'<strong>Nominal gallery structure</strong> — no deformation detected by LiDAR.', detail:'Monthly LiDAR scan'},
+    ], recs:['Daily monitoring of infiltration flow rate','Visual inspection of galleries E3-E7 within 48h','Maintain increased vigilance during the rainy season']},
+    'Lupeni, Hunedoara': { score:44, color:'var(--accent-warning)', label:'MODERATE RISK', findings:[
+      {type:'warning', text:'<strong>Increasing microseismicity</strong>: +180% compared with baseline over the last 3 months.', detail:'INFP + field sensors'},
+      {type:'ok', text:'<strong>Stable subsidence</strong>: +1.8mm/month — monitored.', detail:'EGMS'},
+      {type:'ok', text:'<strong>Ventilation and gases OK</strong>. Parameters within standards.', detail:'IoT sensors'},
+    ], recs:['Increase seismic monitoring frequency to daily','Check support structures in active areas','Monthly report for ITM Hunedoara']},
+  },
+  tunnel: {
+    'Margina-Holdea (A1)': { score:58, color:'var(--accent-warning)', label:'WATCH', findings:[
+      {type:'warning', text:'<strong>Accelerated convergence: -1.2mm/day</strong> in section km 2+340. Alert threshold: -1.0mm/day.', detail:'Wireless convergometers · Real-time data'},
+      {type:'warning', text:'<strong>2 new cracks detected by LiDAR</strong> in the crown area. Length: 3–8cm.', detail:'Monthly LiDAR scan · Point-cloud comparison'},
+      {type:'ok', text:'<strong>Wall humidity 67%</strong> — below the 80% critical threshold.', detail:'Humidity sensors'},
+    ], recs:['Urgent consolidation grouting in km 2+340 area','Detailed visual inspection of crown + side walls','Notify designer (PORR) and CNAIR site supervisor','LiDAR re-scan in 14 days']},
+    'Meses Tunnel (A3)': { score:18, color:'var(--accent-mine)', label:'NOMINAL', findings:[
+      {type:'ok', text:'<strong>Nominal convergence: -0.3mm/day</strong> — under 10% of the alert threshold.', detail:'Convergometers · Real-time data'},
+      {type:'ok', text:'<strong>No new cracks detected</strong> in the last 30 days. Structure compliant.', detail:'Periodic LiDAR'},
+      {type:'ok', text:'<strong>Minimal surface subsidence</strong>: -0.4mm/month. Well below the serviceability limit.', detail:'EGMS Sentinel-1'},
+    ], recs:['Continue current monitoring according to plan','Monthly SHM report sent to CNAIR — no urgent actions','Schedule quarterly LiDAR scan']},
+    'Sibiu-Pitesti (Poiana Tunnel)': { score:14, color:'var(--accent-mine)', label:'NOMINAL', findings:[
+      {type:'ok', text:'<strong>All structural parameters within standards</strong>. New tunnel in operation.', detail:'Complete active sensor system'},
+      {type:'ok', text:'<strong>Surface subsidence: -0.2mm/month</strong>. Negligible.', detail:'EGMS'},
+    ], recs:['Standard monitoring according to operating plan','Full annual check']},
+  }
+};
+
+function updateReport() {
+  const sector = document.getElementById('sector-select').value;
+  const loc = document.getElementById('location-select').value;
+  const locations = {
+    mine: ['Praid, Harghita','Slanic, Prahova','Lupeni, Hunedoara'],
+    tunnel: ['Margina-Holdea (A1)','Meses Tunnel (A3)','Sibiu-Pitesti (Poiana Tunnel)']
+  };
+  const sel = document.getElementById('location-select');
+  sel.innerHTML = locations[sector].map(l => `<option>${l}</option>`).join('');
+}
+
+function generateReport() {
+  const btn = document.getElementById('gen-text');
+  const icon = document.getElementById('gen-icon');
+  btn.textContent = 'Processing...';
+  icon.textContent = '⏳';
+
+  setTimeout(() => {
+    const sector = document.getElementById('sector-select').value;
+    const loc = document.getElementById('location-select').value;
+    const seismic = parseFloat(document.getElementById('seismic-range').value);
+    const rain = parseInt(document.getElementById('rain-range').value);
+
+    // Get or generate data
+    const sectorData = reportData[sector] || reportData.mine;
+    const locData = sectorData[loc] || Object.values(sectorData)[0];
+
+    // Adjust score by seismic/rain
+    let score = locData.score;
+    score = Math.min(99, score + (seismic - 3) * 8 + (rain - 50) * 0.2);
+    score = Math.max(5, Math.round(score));
+
+    // Update UI
+    document.getElementById('rp-title').textContent = `Risk assessment report — ${loc}`;
+    document.getElementById('rp-meta').textContent = `GeoSentinel v2.1 · ${new Date().toLocaleString('en-US')} · Sector: ${sector==='mine'?'Mining/Salt Mining':'Tunnel/Infrastructure'}`;
+    document.getElementById('rp-score').textContent = score;
+
+    const scoreColor = score >= 70 ? 'var(--accent-critical)' : score >= 40 ? 'var(--accent-warning)' : 'var(--accent-mine)';
+    document.getElementById('rp-score').style.color = scoreColor;
+
+    const findingsHtml = locData.findings.map(f => `
+      <div class="finding-row ${f.type}">
+        <div class="finding-icon">${f.type==='critical'?'🔴':f.type==='warning'?'🟡':'🟢'}</div>
+        <div class="finding-text">${f.text}<div class="finding-detail">${f.detail}</div></div>
+      </div>`).join('');
+
+    document.getElementById('rp-findings').innerHTML = findingsHtml;
+
+    const recsHtml = locData.recs.map(r => `<li>${r}</li>`).join('');
+    document.getElementById('rp-recs').querySelector('.rec-list').innerHTML = recsHtml;
+
+    btn.textContent = 'Regenerate';
+    icon.textContent = '✓';
+  }, 1400);
+}
+
+function scrollToContact() {
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Contact Form ──
+function submitContact(e) {
+  e.preventDefault();
+  const btn = document.getElementById('contact-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.style.display = 'none';
+    document.getElementById('contact-success').style.display = 'block';
+  }, 1200);
+}
+
+// ── Reveal on Scroll ──
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (Array.from(e.target.parentNode.querySelectorAll('.reveal')).indexOf(e.target) * 0.08) + 's';
+      e.target.classList.add('in-view');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── Nav Scroll ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').style.background =
+    scrollY > 20 ? 'rgba(4,8,15,0.95)' : 'rgba(4,8,15,0.75)';
+});
+
+// ── Animated counters on hero ──
+document.querySelectorAll('.hero-stat-value').forEach(el => {
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.style.transition = 'opacity 1s ease';
+    el.style.opacity = '1';
+  }, 500);
+});
+
+// ── Progress bars ──
+document.querySelectorAll('.progress-bar').forEach(bar => {
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      bar.style.width = (bar.dataset.pct || '70') + '%';
+      obs.disconnect();
+    }
+  });
+  obs.observe(bar);
+});
+
+// ── Mine detail popup (simplified) ──
+function showMineDetail(name) {
+  const details = {
+    praid: 'Praid: subsidence 4.2mm/month, 3 microseisms/week, increased precipitation. HIGH RISK — urgent inspection.',
+    lupeni: 'Lupeni: microseismicity +180% versus baseline. Stable subsidence 1.8mm/month. MODERATE RISK.',
+    slanic: 'Slanic: Infiltration +18%, subsidence at the watch threshold. Increased monitoring recommended.',
+    ocnadej: 'Ocna Dej: all parameters nominal. Subsidence 0.4mm/month. Monthly report OK.'
+  };
+  if (details[name]) alert('GeoSentinel — ' + details[name]);
+}
+</script>
+</body>
+</html>

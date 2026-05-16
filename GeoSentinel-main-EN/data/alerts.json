@@ -1,0 +1,855 @@
+[
+  {
+    "site_id": "praid",
+    "site_name": "Praid Salt Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "alarm",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -8.15,
+        "unit": "mm/month",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/month",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 5.0,
+        "unit": "events/day (7d avg)",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 5.0 events/day",
+        "description": "35 microseismic events in 7 days, maximum magnitude M=2.47."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 176.3,
+        "unit": "% increase vs 90d baseline",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 100%",
+        "description": "Recent flow 523 l/h vs baseline 189 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 5.97,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 1.11,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.601,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -21.6,
+      "seismic_events_last_30d": 111,
+      "infiltration_current_lph": 566.0,
+      "air_co_current_mg_m3": 7.34
+    }
+  },
+  {
+    "site_id": "ocna_dej",
+    "site_name": "Ocna Dej Salt Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": 0.89,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 23.0,
+        "unit": "% increase vs 90d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Recent flow 223 l/h vs baseline 181 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 7.36,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.27,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.359,
+    "summary_metrics": {
+      "insar_total_displacement_mm": 2.0,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 222.0,
+      "air_co_current_mg_m3": 7.92
+    }
+  },
+  {
+    "site_id": "cacica",
+    "site_name": "Cacica Salt Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": 0.03,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "0 microseismic events in 7 days, maximum magnitude M=0.00."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 25.1,
+        "unit": "% increase vs 90d baseline",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Recent flow 260 l/h vs baseline 208 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.77,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 1.95,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.414,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -0.9,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 232.0,
+      "air_co_current_mg_m3": 8.31
+    }
+  },
+  {
+    "site_id": "slanic",
+    "site_name": "Slanic Prahova Salt Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -2.23,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.14,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "1 microseismic events in 7 days, maximum magnitude M=3.60."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 34.2,
+        "unit": "% increase vs 90d baseline",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Recent flow 302 l/h vs baseline 225 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.12,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.02,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.507,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.1,
+      "seismic_events_last_30d": 6,
+      "infiltration_current_lph": 251.0,
+      "air_co_current_mg_m3": 6.89
+    }
+  },
+  {
+    "site_id": "targu_ocna",
+    "site_name": "Targu Ocna Salt Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": 1.61,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "0 microseismic events in 7 days, maximum magnitude M=0.00."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 37.3,
+        "unit": "% increase vs 90d baseline",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Recent flow 297 l/h vs baseline 216 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.72,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.12,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.479,
+    "summary_metrics": {
+      "insar_total_displacement_mm": 0.4,
+      "seismic_events_last_30d": 1,
+      "infiltration_current_lph": 252.0,
+      "air_co_current_mg_m3": 8.85
+    }
+  },
+  {
+    "site_id": "lupeni",
+    "site_name": "Lupeni Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -1.23,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "0 microseismic events in 7 days, maximum magnitude M=0.00."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 24.1,
+        "unit": "% increase vs 90d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Recent flow 245 l/h vs baseline 198 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.62,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.0,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      },
+      {
+        "name": "CH4 (methane)",
+        "value": 0.374,
+        "unit": "% volume (7d peak)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Methane concentration (average 0.273%). Mining standard: 1.5% = work stoppage, 5% = lower explosive limit (LEL). Dominant risk for coal mines."
+      }
+    ],
+    "ml_anomaly_score": 0.347,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -6.8,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 238.0,
+      "air_co_current_mg_m3": 8.54,
+      "air_ch4_current_pct": 0.253
+    }
+  },
+  {
+    "site_id": "livezeni",
+    "site_name": "Livezeni Mine",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -0.49,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "0 microseismic events in 7 days, maximum magnitude M=0.00."
+      },
+      {
+        "name": "Water infiltration",
+        "value": 27.0,
+        "unit": "% increase vs 90d baseline",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Recent flow 262 l/h vs baseline 206 l/h."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.07,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 1.98,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      },
+      {
+        "name": "CH4 (methane)",
+        "value": 0.383,
+        "unit": "% volume (7d peak)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Methane concentration (average 0.286%). Mining standard: 1.5% = work stoppage, 5% = lower explosive limit (LEL). Dominant risk for coal mines."
+      }
+    ],
+    "ml_anomaly_score": 0.322,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -4.3,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 254.0,
+      "air_co_current_mg_m3": 8.78,
+      "air_ch4_current_pct": 0.383
+    }
+  },
+  {
+    "site_id": "margina_holdea_t2",
+    "site_name": "Margina-Holdea T2 Tunnel (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "alarm",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -1.42,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Lining convergence",
+        "value": -0.565,
+        "unit": "mm/day (7d avg)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 0.5 mm/day",
+        "description": "Cumulative convergence: -43.74 mm. Measured with wireless convergometers in the critical section."
+      },
+      {
+        "name": "Dynamic vibrations (PGV)",
+        "value": 9.19,
+        "unit": "mm/s (7d peak)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/s",
+        "description": "Vibrations from excavation/traffic. DIN 4150 standard for sensitive structures: 5 mm/s threshold, 20 mm/s critical."
+      },
+      {
+        "name": "Wall humidity",
+        "value": 64.1,
+        "unit": "% (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average lining humidity. High values indicate active infiltration through the lining or insufficient ventilation."
+      },
+      {
+        "name": "New LiDAR cracks",
+        "value": 9,
+        "unit": "cracks (last 30d)",
+        "severity": "warning",
+        "threshold_hit": "warning >= 5 cracks",
+        "description": "Total cumulat: 14 cracks. Detected through periodic mobile LiDAR scanning."
+      },
+      {
+        "name": "Tunnel water inflow",
+        "value": 129.9,
+        "unit": "% increase vs 60d baseline",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 120%",
+        "description": "Debit recent 30.4 l/min vs baseline 13.2 l/min. Infiltration through lining/cracks, correlated with precipitation."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 13.55,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.97,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 2.5 mg/m³",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.381,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.2,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -43.74,
+      "total_cracks_lidar": 14,
+      "tunnel_length_m": 1985,
+      "excavation_progress_pct": 56.0,
+      "air_co_current_mg_m3": 14.44
+    }
+  },
+  {
+    "site_id": "margina_holdea_t1",
+    "site_name": "Margina-Holdea T1 Tunnel (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -3.93,
+        "unit": "mm/month",
+        "severity": "watch",
+        "threshold_hit": "watch >= 3 mm/month",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Lining convergence",
+        "value": -0.196,
+        "unit": "mm/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Cumulative convergence: -34.87 mm. Measured with wireless convergometers in the critical section."
+      },
+      {
+        "name": "Dynamic vibrations (PGV)",
+        "value": 5.31,
+        "unit": "mm/s (7d peak)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/s",
+        "description": "Vibrations from excavation/traffic. DIN 4150 standard for sensitive structures: 5 mm/s threshold, 20 mm/s critical."
+      },
+      {
+        "name": "Wall humidity",
+        "value": 57.3,
+        "unit": "% (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average lining humidity. High values indicate active infiltration through the lining or insufficient ventilation."
+      },
+      {
+        "name": "New LiDAR cracks",
+        "value": 1,
+        "unit": "cracks (last 30d)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Total cumulat: 15 cracks. Detected through periodic mobile LiDAR scanning."
+      },
+      {
+        "name": "Tunnel water inflow",
+        "value": 6.3,
+        "unit": "% increase vs 60d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Debit recent 13.2 l/min vs baseline 12.4 l/min. Infiltration through lining/cracks, correlated with precipitation."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 7.93,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.15,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.46,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -6.2,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -34.87,
+      "total_cracks_lidar": 15,
+      "tunnel_length_m": 415,
+      "excavation_progress_pct": 95.0,
+      "air_co_current_mg_m3": 6.73
+    }
+  },
+  {
+    "site_id": "poiana_a1",
+    "site_name": "Poiana Tunnel (A1 Sibiu-Pitesti)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -1.66,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Lining convergence",
+        "value": -0.185,
+        "unit": "mm/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Cumulative convergence: -36.22 mm. Measured with wireless convergometers in the critical section."
+      },
+      {
+        "name": "Dynamic vibrations (PGV)",
+        "value": 3.51,
+        "unit": "mm/s (7d peak)",
+        "severity": "info",
+        "threshold_hit": "below DIN 4150 threshold",
+        "description": "Vibrations from excavation/traffic. DIN 4150 standard for sensitive structures: 5 mm/s threshold, 20 mm/s critical."
+      },
+      {
+        "name": "Wall humidity",
+        "value": 59.0,
+        "unit": "% (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average lining humidity. High values indicate active infiltration through the lining or insufficient ventilation."
+      },
+      {
+        "name": "New LiDAR cracks",
+        "value": 0,
+        "unit": "cracks (last 30d)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Total cumulat: 13 cracks. Detected through periodic mobile LiDAR scanning."
+      },
+      {
+        "name": "Tunnel water inflow",
+        "value": 11.4,
+        "unit": "% increase vs 60d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Debit recent 14.6 l/min vs baseline 13.1 l/min. Infiltration through lining/cracks, correlated with precipitation."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.66,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.03,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.472,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -0.6,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -36.22,
+      "total_cracks_lidar": 13,
+      "tunnel_length_m": 1700,
+      "excavation_progress_pct": 15.0,
+      "air_co_current_mg_m3": 6.94
+    }
+  },
+  {
+    "site_id": "curtea_arges",
+    "site_name": "Curtea de Arges Tunnel (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "warning",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -2.2,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Lining convergence",
+        "value": -0.191,
+        "unit": "mm/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Cumulative convergence: -37.66 mm. Measured with wireless convergometers in the critical section."
+      },
+      {
+        "name": "Dynamic vibrations (PGV)",
+        "value": 10.17,
+        "unit": "mm/s (7d peak)",
+        "severity": "warning",
+        "threshold_hit": "warning >= 10 mm/s",
+        "description": "Vibrations from excavation/traffic. DIN 4150 standard for sensitive structures: 5 mm/s threshold, 20 mm/s critical."
+      },
+      {
+        "name": "Wall humidity",
+        "value": 60.4,
+        "unit": "% (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average lining humidity. High values indicate active infiltration through the lining or insufficient ventilation."
+      },
+      {
+        "name": "New LiDAR cracks",
+        "value": 2,
+        "unit": "cracks (last 30d)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 2 cracks",
+        "description": "Total cumulat: 12 cracks. Detected through periodic mobile LiDAR scanning."
+      },
+      {
+        "name": "Tunnel water inflow",
+        "value": -1.6,
+        "unit": "% increase vs 60d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Debit recent 12.6 l/min vs baseline 12.8 l/min. Infiltration through lining/cracks, correlated with precipitation."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 8.58,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 2.04,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.445,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -3.1,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -37.66,
+      "total_cracks_lidar": 12,
+      "tunnel_length_m": 1350,
+      "excavation_progress_pct": 70.0,
+      "air_co_current_mg_m3": 8.82
+    }
+  },
+  {
+    "site_id": "meses_a3",
+    "site_name": "Meses Tunnel (A3)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "InSAR subsidence",
+        "value": -1.13,
+        "unit": "mm/month",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average vertical deformation rate over the last 36 days, measured from Sentinel-1 InSAR with LOS projected vertically."
+      },
+      {
+        "name": "Microseismicity",
+        "value": 0.0,
+        "unit": "events/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "0 real catalogued events in 7 days",
+        "description": "No natural M≥1.5 earthquake catalogued by EMSC/USGS within a 50 km radius. Seismically inactive area; induced microseismicity below M<1.5 requires a local seismic network."
+      },
+      {
+        "name": "Lining convergence",
+        "value": -0.055,
+        "unit": "mm/day (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Cumulative convergence: -9.68 mm. Measured with wireless convergometers in the critical section."
+      },
+      {
+        "name": "Dynamic vibrations (PGV)",
+        "value": 0.98,
+        "unit": "mm/s (7d peak)",
+        "severity": "info",
+        "threshold_hit": "below DIN 4150 threshold",
+        "description": "Vibrations from excavation/traffic. DIN 4150 standard for sensitive structures: 5 mm/s threshold, 20 mm/s critical."
+      },
+      {
+        "name": "Wall humidity",
+        "value": 44.1,
+        "unit": "% (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Average lining humidity. High values indicate active infiltration through the lining or insufficient ventilation."
+      },
+      {
+        "name": "New LiDAR cracks",
+        "value": 1,
+        "unit": "cracks (last 30d)",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Total cumulat: 5 cracks. Detected through periodic mobile LiDAR scanning."
+      },
+      {
+        "name": "Tunnel water inflow",
+        "value": 15.2,
+        "unit": "% increase vs 60d baseline",
+        "severity": "info",
+        "threshold_hit": "below watch threshold",
+        "description": "Debit recent 7.2 l/min vs baseline 6.2 l/min. Infiltration through lining/cracks, correlated with precipitation."
+      },
+      {
+        "name": "CO (carbon monoxide)",
+        "value": 0.53,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below occupational limit",
+        "description": "Carbon monoxide in the underground atmosphere. Sources: diesel equipment and blasting. OSHA occupational limit: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "PM10 dust",
+        "value": 0.26,
+        "unit": "mg/m³ (7d avg)",
+        "severity": "info",
+        "threshold_hit": "below mining dust limit",
+        "description": "Suspended dust from drilling/excavation. Respirable mining dust limit: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.377,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.4,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -9.68,
+      "total_cracks_lidar": 5,
+      "tunnel_length_m": 2890,
+      "excavation_progress_pct": 0.0,
+      "air_co_current_mg_m3": 0.18
+    }
+  }
+]
