@@ -1,0 +1,855 @@
+[
+  {
+    "site_id": "praid",
+    "site_name": "Salina Praid",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "alarm",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -5.21,
+        "unit": "mm/lună",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/lună",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 4.29,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "warning",
+        "threshold_hit": "warning >= 2.5 evenimente/zi",
+        "description": "30 microseisme în 7z, magnitudine maximă M=2.10."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 176.3,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 100%",
+        "description": "Debit recent 523 l/h vs baseline 189 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 6.29,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.43,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.605,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -15.1,
+      "seismic_events_last_30d": 115,
+      "infiltration_current_lph": 566.0,
+      "air_co_current_mg_m3": 8.18
+    }
+  },
+  {
+    "site_id": "ocna_dej",
+    "site_name": "Salina Ocna Dej",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -0.37,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 23.0,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 223 l/h vs baseline 181 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 8.34,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.95,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.385,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -0.6,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 222.0,
+      "air_co_current_mg_m3": 9.93
+    }
+  },
+  {
+    "site_id": "cacica",
+    "site_name": "Salina Cacica",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -0.73,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "0 microseisme în 7z, magnitudine maximă M=0.00."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 25.1,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Debit recent 260 l/h vs baseline 208 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 8.45,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.86,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.423,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -4.9,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 232.0,
+      "air_co_current_mg_m3": 9.43
+    }
+  },
+  {
+    "site_id": "slanic",
+    "site_name": "Salina Slănic Prahova",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -1.26,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.14,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "1 microseisme în 7z, magnitudine maximă M=3.60."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 34.2,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Debit recent 302 l/h vs baseline 225 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 7.69,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 2.36,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.531,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.7,
+      "seismic_events_last_30d": 6,
+      "infiltration_current_lph": 251.0,
+      "air_co_current_mg_m3": 8.77
+    }
+  },
+  {
+    "site_id": "targu_ocna",
+    "site_name": "Salina Târgu Ocna",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": 1.17,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "0 microseisme în 7z, magnitudine maximă M=0.00."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 37.3,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Debit recent 297 l/h vs baseline 216 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 7.66,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 2.03,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.539,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -2.2,
+      "seismic_events_last_30d": 1,
+      "infiltration_current_lph": 252.0,
+      "air_co_current_mg_m3": 6.83
+    }
+  },
+  {
+    "site_id": "lupeni",
+    "site_name": "Mina Lupeni",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -3.97,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "0 microseisme în 7z, magnitudine maximă M=0.00."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 24.1,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 245 l/h vs baseline 198 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 8.27,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 2.1,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      },
+      {
+        "name": "CH4 (metan)",
+        "value": 0.384,
+        "unit": "% volum (peak 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Concentrație metan (medie 0.320%). Norma minieră: 1.5% = oprire lucru, 5% = limită inferioară de explozie (LEL). Risc dominant pentru mine de cărbune."
+      }
+    ],
+    "ml_anomaly_score": 0.35,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -7.8,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 238.0,
+      "air_co_current_mg_m3": 8.04,
+      "air_ch4_current_pct": 0.357
+    }
+  },
+  {
+    "site_id": "livezeni",
+    "site_name": "Mina Livezeni",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -0.22,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "0 microseisme în 7z, magnitudine maximă M=0.00."
+      },
+      {
+        "name": "Infiltrație de apă",
+        "value": 27.0,
+        "unit": "% creștere vs baseline 90z",
+        "severity": "watch",
+        "threshold_hit": "watch >= 25%",
+        "description": "Debit recent 262 l/h vs baseline 206 l/h."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 7.94,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.95,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      },
+      {
+        "name": "CH4 (metan)",
+        "value": 0.45,
+        "unit": "% volum (peak 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Concentrație metan (medie 0.356%). Norma minieră: 1.5% = oprire lucru, 5% = limită inferioară de explozie (LEL). Risc dominant pentru mine de cărbune."
+      }
+    ],
+    "ml_anomaly_score": 0.361,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.0,
+      "seismic_events_last_30d": 0,
+      "infiltration_current_lph": 254.0,
+      "air_co_current_mg_m3": 8.17,
+      "air_ch4_current_pct": 0.353
+    }
+  },
+  {
+    "site_id": "margina_holdea_t2",
+    "site_name": "Tunel Margina-Holdea T2 (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "alarm",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": 1.37,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Convergență lining",
+        "value": -0.553,
+        "unit": "mm/zi (medie 7z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 0.5 mm/zi",
+        "description": "Convergență cumulată: -42.35 mm. Măsurat prin convergometre wireless în secțiunea critică."
+      },
+      {
+        "name": "Vibrații dinamice (PGV)",
+        "value": 6.25,
+        "unit": "mm/s (peak 7z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/s",
+        "description": "Vibrații din excavație/trafic. Standard DIN 4150 pentru structuri sensibile: 5 mm/s prag, 20 mm/s critic."
+      },
+      {
+        "name": "Umiditate perete",
+        "value": 62.2,
+        "unit": "% (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Umiditate medie a căptușelii. Valori mari indică infiltrații active prin lining sau ventilație insuficientă."
+      },
+      {
+        "name": "Fisuri noi LiDAR",
+        "value": 12,
+        "unit": "fisuri (ultimele 30z)",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 10 fisuri",
+        "description": "Total cumulat: 18 fisuri. Detectate prin scanare LiDAR mobile periodică."
+      },
+      {
+        "name": "Infiltrație apă tunel",
+        "value": 128.7,
+        "unit": "% creștere vs baseline 60z",
+        "severity": "alarm",
+        "threshold_hit": "alarm >= 120%",
+        "description": "Debit recent 30.5 l/min vs baseline 13.3 l/min. Infiltrație prin lining/fisuri, corelată cu precipitațiile."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 12.98,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 2.53,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 2.5 mg/m³",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.414,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -0.4,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -42.35,
+      "total_cracks_lidar": 18,
+      "tunnel_length_m": 1985,
+      "excavation_progress_pct": 56.0,
+      "air_co_current_mg_m3": 11.94
+    }
+  },
+  {
+    "site_id": "margina_holdea_t1",
+    "site_name": "Tunel Margina-Holdea T1 (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": 0.75,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Convergență lining",
+        "value": -0.159,
+        "unit": "mm/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Convergență cumulată: -34.83 mm. Măsurat prin convergometre wireless în secțiunea critică."
+      },
+      {
+        "name": "Vibrații dinamice (PGV)",
+        "value": 7.49,
+        "unit": "mm/s (peak 7z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/s",
+        "description": "Vibrații din excavație/trafic. Standard DIN 4150 pentru structuri sensibile: 5 mm/s prag, 20 mm/s critic."
+      },
+      {
+        "name": "Umiditate perete",
+        "value": 58.4,
+        "unit": "% (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Umiditate medie a căptușelii. Valori mari indică infiltrații active prin lining sau ventilație insuficientă."
+      },
+      {
+        "name": "Fisuri noi LiDAR",
+        "value": 2,
+        "unit": "fisuri (ultimele 30z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 2 fisuri",
+        "description": "Total cumulat: 14 fisuri. Detectate prin scanare LiDAR mobile periodică."
+      },
+      {
+        "name": "Infiltrație apă tunel",
+        "value": 12.8,
+        "unit": "% creștere vs baseline 60z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 13.8 l/min vs baseline 12.2 l/min. Infiltrație prin lining/fisuri, corelată cu precipitațiile."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 8.28,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.94,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.44,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -0.1,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -34.83,
+      "total_cracks_lidar": 14,
+      "tunnel_length_m": 415,
+      "excavation_progress_pct": 95.0,
+      "air_co_current_mg_m3": 8.0
+    }
+  },
+  {
+    "site_id": "poiana_a1",
+    "site_name": "Tunel Poiana (A1 Sibiu-Pitești)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "watch",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": 1.37,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Convergență lining",
+        "value": -0.214,
+        "unit": "mm/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Convergență cumulată: -38.32 mm. Măsurat prin convergometre wireless în secțiunea critică."
+      },
+      {
+        "name": "Vibrații dinamice (PGV)",
+        "value": 7.81,
+        "unit": "mm/s (peak 7z)",
+        "severity": "watch",
+        "threshold_hit": "watch >= 5 mm/s",
+        "description": "Vibrații din excavație/trafic. Standard DIN 4150 pentru structuri sensibile: 5 mm/s prag, 20 mm/s critic."
+      },
+      {
+        "name": "Umiditate perete",
+        "value": 56.5,
+        "unit": "% (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Umiditate medie a căptușelii. Valori mari indică infiltrații active prin lining sau ventilație insuficientă."
+      },
+      {
+        "name": "Fisuri noi LiDAR",
+        "value": 0,
+        "unit": "fisuri (ultimele 30z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Total cumulat: 8 fisuri. Detectate prin scanare LiDAR mobile periodică."
+      },
+      {
+        "name": "Infiltrație apă tunel",
+        "value": 15.3,
+        "unit": "% creștere vs baseline 60z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 15.0 l/min vs baseline 13.0 l/min. Infiltrație prin lining/fisuri, corelată cu precipitațiile."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 8.61,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 1.96,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.423,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.8,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -38.32,
+      "total_cracks_lidar": 8,
+      "tunnel_length_m": 1700,
+      "excavation_progress_pct": 15.0,
+      "air_co_current_mg_m3": 10.0
+    }
+  },
+  {
+    "site_id": "curtea_arges",
+    "site_name": "Tunel Curtea de Argeș (A1)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": -0.03,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Convergență lining",
+        "value": -0.167,
+        "unit": "mm/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Convergență cumulată: -35.50 mm. Măsurat prin convergometre wireless în secțiunea critică."
+      },
+      {
+        "name": "Vibrații dinamice (PGV)",
+        "value": 3.59,
+        "unit": "mm/s (peak 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul DIN 4150",
+        "description": "Vibrații din excavație/trafic. Standard DIN 4150 pentru structuri sensibile: 5 mm/s prag, 20 mm/s critic."
+      },
+      {
+        "name": "Umiditate perete",
+        "value": 58.0,
+        "unit": "% (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Umiditate medie a căptușelii. Valori mari indică infiltrații active prin lining sau ventilație insuficientă."
+      },
+      {
+        "name": "Fisuri noi LiDAR",
+        "value": 1,
+        "unit": "fisuri (ultimele 30z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Total cumulat: 9 fisuri. Detectate prin scanare LiDAR mobile periodică."
+      },
+      {
+        "name": "Infiltrație apă tunel",
+        "value": 6.8,
+        "unit": "% creștere vs baseline 60z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 13.6 l/min vs baseline 12.7 l/min. Infiltrație prin lining/fisuri, corelată cu precipitațiile."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 7.82,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 2.03,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.463,
+    "summary_metrics": {
+      "insar_total_displacement_mm": -1.0,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -35.5,
+      "total_cracks_lidar": 9,
+      "tunnel_length_m": 1350,
+      "excavation_progress_pct": 70.0,
+      "air_co_current_mg_m3": 7.34
+    }
+  },
+  {
+    "site_id": "meses_a3",
+    "site_name": "Tunel Meseș (A3)",
+    "as_of": "2026-05-15T00:00:00",
+    "overall_severity": "info",
+    "signals": [
+      {
+        "name": "Subsidență InSAR",
+        "value": 0.71,
+        "unit": "mm/lună",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Rata medie de deformare verticală pe ultimele 36 zile, măsurată din Sentinel-1 InSAR (LOS proiectat vertical)."
+      },
+      {
+        "name": "Microseismicitate",
+        "value": 0.0,
+        "unit": "evenimente/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "0 evenimente reale catalogate în 7 zile",
+        "description": "Niciun cutremur natural M≥1.5 catalogat de EMSC/USGS în raza de 50 km. Zonă seismic inactivă; pentru micro-seismicitate indusă (M<1.5) e necesară rețea seismică locală."
+      },
+      {
+        "name": "Convergență lining",
+        "value": -0.041,
+        "unit": "mm/zi (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Convergență cumulată: -7.48 mm. Măsurat prin convergometre wireless în secțiunea critică."
+      },
+      {
+        "name": "Vibrații dinamice (PGV)",
+        "value": 0.67,
+        "unit": "mm/s (peak 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul DIN 4150",
+        "description": "Vibrații din excavație/trafic. Standard DIN 4150 pentru structuri sensibile: 5 mm/s prag, 20 mm/s critic."
+      },
+      {
+        "name": "Umiditate perete",
+        "value": 41.3,
+        "unit": "% (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Umiditate medie a căptușelii. Valori mari indică infiltrații active prin lining sau ventilație insuficientă."
+      },
+      {
+        "name": "Fisuri noi LiDAR",
+        "value": 0,
+        "unit": "fisuri (ultimele 30z)",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Total cumulat: 8 fisuri. Detectate prin scanare LiDAR mobile periodică."
+      },
+      {
+        "name": "Infiltrație apă tunel",
+        "value": 7.8,
+        "unit": "% creștere vs baseline 60z",
+        "severity": "info",
+        "threshold_hit": "sub pragul de watch",
+        "description": "Debit recent 7.0 l/min vs baseline 6.5 l/min. Infiltrație prin lining/fisuri, corelată cu precipitațiile."
+      },
+      {
+        "name": "CO (monoxid de carbon)",
+        "value": 0.93,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita ocupațională",
+        "description": "Monoxid de carbon în atmosfera subterană. Surse: utilaje diesel, pușcături. Limita ocupațională OSHA: ~35 mg/m³ (8h)."
+      },
+      {
+        "name": "Praf PM10",
+        "value": 0.45,
+        "unit": "mg/m³ (medie 7z)",
+        "severity": "info",
+        "threshold_hit": "sub limita de praf minier",
+        "description": "Praf în suspensie din forare/excavație. Limita de praf minier respirabil: ~4-5 mg/m³."
+      }
+    ],
+    "ml_anomaly_score": 0.496,
+    "summary_metrics": {
+      "insar_total_displacement_mm": 4.2,
+      "seismic_events_last_30d": 0,
+      "convergence_cumulative_mm": -7.48,
+      "total_cracks_lidar": 8,
+      "tunnel_length_m": 2890,
+      "excavation_progress_pct": 0.0,
+      "air_co_current_mg_m3": 1.56
+    }
+  }
+]
